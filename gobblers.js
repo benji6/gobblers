@@ -35,7 +35,7 @@ analysisSwitch.onclick = function () {
 	analysisOn = !analysisOn;
 	var analysisDisplay = document.getElementById('analysis');
 	if (analysisOn) {
-		analysisDisplay.style = 'display: block;';
+		analysisDisplay.style = 'display: inliine-block;';
 	} else {
 		analysisDisplay.style = 'display: none;';
 	}
