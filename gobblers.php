@@ -1,4 +1,10 @@
-<?php include 'includes/template.php'; ?>
+<!DOCTYPE html>
+<html>
+	<head>
+		<?php include '../includes/head_template.php' ?>
+	</head>
+	<body>
+		<?php include '../includes/header_template.php' ?>
 		<h2>Gobblers Evolution Simulator</h2>
 		<h3>About</h3>
 		<p>
@@ -76,6 +82,7 @@
 			</tbody>
 		</table>
 		<script src="gobblers.js"></script>
-		<script src="shifter.js"></script>
+		<?php include '../includes/template_scripts.php' ?>
+		<script>shifterOn = false; //deactivate shifter from template script to free up resources</script>
 	</body>
 </html>

@@ -1,5 +1,3 @@
-//free up resources by deactivating shifter
-shifterOn = false;
 //requestAnimFrame
 window.requestAnimFrame=(function(){
 	return  window.requestAnimationFrame ||
@@ -46,7 +44,6 @@ animateStyleSwitch.onclick = function() {
 	animateStyle = !animateStyle;
 };
 controller.appendChild(analysisSwitch);
-controller.appendChild(document.createElement('br'));
 controller.appendChild(animateStyleSwitch);
 
 //view
