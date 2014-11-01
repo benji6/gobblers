@@ -35,9 +35,9 @@ analysisSwitch.onclick = function () {
 	analysisOn = !analysisOn;
 	var analysisDisplay = document.getElementById('analysis');
 	if (analysisOn) {
-		analysisDisplay.style = 'display: inline-block;';
+		analysisDisplay.style.display = '';
 	} else {
-		analysisDisplay.style = 'display: none;';
+		analysisDisplay.style.display = 'none';
 	}
 };
 var animateStyleSwitch = document.createElement('button');
