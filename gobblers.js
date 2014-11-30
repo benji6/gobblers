@@ -1,10 +1,11 @@
+var gobblers = (function() {
 //requestAnimFrame
-window.requestAnimFrame=(function(){
+window.requestAnimFrame=(function() {
 	return  window.requestAnimationFrame ||
 	window.webkitRequestAnimationFrame ||
 	window.mozRequestAnimationFrame ||
-	function(callback){
-		window.setTimeout(callback,1000/60);
+	function(callback) {
+		window.setTimeout(callback, 1000 / 60);
 	};
 })();
 
@@ -15,7 +16,7 @@ var intStartingGobblerEnergy = 6;
 var gobbler = [];
 var environment = {
 	light: function() {
-		return (Math.sin(Date.now()/10000)+1)/2;
+		return (Math.sin(Date.now() / 10000) + 1) / 2;
 	},
 	oxygenLevel: intStartingGobblers * intStartingGobblerEnergy,
 	carbonDioxideLevel: intStartingGobblers * intStartingGobblerEnergy,
@@ -28,6 +29,17 @@ var analysisOn = true;
 //controller
 var controller = document.getElementById('controller');
 var analysisSwitch = document.createElement('button');
+var animateStyleSwitch = document.createElement('button');
+analysisSwitch.onfocus = function () {
+	if (this.blur) {
+		this.blur()
+	}
+};
+animateStyleSwitch.onfocus = function () {
+	if (this.blur) {
+		this.blur()
+	}
+};
 analysisSwitch.innerHTML = 'Analysis Switch';
 analysisSwitch.onclick = function () {
 	analysisOn = !analysisOn;
@@ -38,7 +50,7 @@ analysisSwitch.onclick = function () {
 		analysisDisplay.style.display = 'none';
 	}
 };
-var animateStyleSwitch = document.createElement('button');
+
 animateStyleSwitch.innerHTML = 'Animation Blur Effect';
 animateStyleSwitch.onclick = function() {
 	animateStyle = !animateStyle;
@@ -48,11 +60,13 @@ controller.appendChild(animateStyleSwitch);
 
 //view
 //canvas
+var viewHolder = document.createElement('div');
 var canvas = document.createElement('canvas');
 canvas.width = intStartingGobblers * 2;
 canvas.height = canvas.width;
 var context = canvas.getContext('2d');
-document.body.appendChild(canvas);
+viewHolder.appendChild(canvas);
+document.body.appendChild(viewHolder);
 //analysis
 var totalEnergy = 0;
 var eatCount = 0;
@@ -68,7 +82,6 @@ var totalPhotosynthesisCoefficient = 0;
 //model
 //init
 init();
-run();
 function init() {
 	//Gobbler constructor
 	function Gobbler(params) {
@@ -252,7 +265,11 @@ function init() {
 		gobbler[i].mutate();
 	}
 }
+var running = true;
 function run() {
+	if (!running) {
+		return;
+	}
 	requestAnimFrame(run);
 	//variable for analysis
 	if (analysisOn) {
@@ -333,3 +350,20 @@ function draw() {
 		context.fill();
 	}
 }
+
+function on() {
+	running = true;
+	run();
+}
+
+function off () {
+	running = false;
+	viewHolder.parentNode && viewHolder.parentNode.removeChild(viewHolder);
+}
+
+return {
+	on: on,
+	off: off
+};
+}());
+gobblers.on();
