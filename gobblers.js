@@ -44,7 +44,7 @@ var outputAvgAtt = document.createElement('output');
 var outputAvgDef = document.createElement('output');
 var outputAvgPhot = document.createElement('output');
 
-(function createTxtView() {
+(function initView() {
 	var curry = function(func) {
 		var curried = function(args) {
 			if (args.length >= func.length) {
@@ -162,11 +162,13 @@ var outputAvgPhot = document.createElement('output');
 	addTd = addToTr('td');
 	addTd('Oldest Generation');
 	tr.appendChild(outputOldestGen);
-
+	
 	viewHolder.appendChild(controller);
 	controller.appendChild(analysisDisplay);
-	
 }());
+function appendView() {
+	document.body.appendChild(viewHolder);
+}
 
 var animateStyle = false;
 //analysis
@@ -210,7 +212,6 @@ canvas.width = intStartingGobblers * 2;
 canvas.height = canvas.width;
 var context = canvas.getContext('2d');
 viewHolder.appendChild(canvas);
-document.body.appendChild(viewHolder);
 //analysis
 var totalEnergy = 0;
 var eatCount = 0;
@@ -496,6 +497,7 @@ function draw() {
 }
 
 function on() {
+	appendView();
 	running = true;
 	run();
 }
