@@ -71,10 +71,10 @@ var outputAvgPhot = document.createElement('output');
 
 	addH2('Gobblers Evolution Simulator');
 	addH3('About');
-	addP('Below is an evolution simulator.' +
-		'The canvas is populated with objects called gobblers.' +
-		'Gobblers require energy to survive and can get energy by photosynthesizing or eating other gobblers.' +
-		'The environment has a light level and oxygen and carbon dioxide levels.' +
+	addP('Below is an evolution simulator. ' +
+		'The canvas is populated with objects called gobblers. ' +
+		'Gobblers require energy to survive and can get energy by photosynthesizing or eating other gobblers. ' +
+		'The environment has a light level and oxygen and carbon dioxide levels. ' +
 		'The gobblers have a number of parameters which influence their behaviour and which can mutate with each successive generation.');
 	addH3('Key');
 	addP('The environment light level is visualized by the background color of the canvas.');
