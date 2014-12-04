@@ -391,7 +391,7 @@ function init() {
 		}
 	};
 	//initial spawn
-	for (i=0;i<intStartingGobblers;i++) {
+	for (var i=0;i<intStartingGobblers;i++) {
 		var gobblerParams = {
 			x: 0,
 			y: 0,
@@ -412,6 +412,7 @@ function init() {
 }
 var running = true;
 function run() {
+	var i;
 	if (!running) {
 		return;
 	}
@@ -487,7 +488,7 @@ function draw() {
 	//lightLevel
 	canvas.style.background='rgb('+lightLevel+','+lightLevel+','+lightLevel+')';
 	//draw gobblers
-	for (i=0; i<gobbler.length; i++) {
+	for (var i=0; i < gobbler.length; i++) {
 		context.fillStyle=gobbler[i].color();
 		context.beginPath();
 		context.arc(gobbler[i].x,gobbler[i].y,gobbler[i].radius(),0,Math.PI*2,true);
@@ -502,7 +503,7 @@ function on() {
 	run();
 }
 
-function off () {
+function off() {
 	running = false;
 	viewHolder.parentNode && viewHolder.parentNode.removeChild(viewHolder);
 }
