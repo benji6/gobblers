@@ -174,7 +174,6 @@ var animateStyle = false;
 //analysis
 var analysisOn = true;
 //controller
-
 var analysisSwitch = document.createElement('button');
 var animateStyleSwitch = document.createElement('button');
 analysisSwitch.onfocus = function () {
@@ -227,6 +226,8 @@ var totalPhotosynthesisCoefficient = 0;
 //model
 //init
 init();
+//i is currently at this level as run funciton and methods in gobbler prototype require it... needs to change...
+var i;
 function init() {
 	//Gobbler constructor
 	function Gobbler(params) {
@@ -296,7 +297,7 @@ function init() {
 	};
 	Gobbler.prototype.eat = function() {
 		//check against all gobblers not yet checked against
-		for (var j=i+1; j < gobbler.length; j++) {
+		for (var j = i + 1; j < gobbler.length; j++) {
 			//check contact
 			if(this.x>=gobbler[j].x-gobbler[j].radius()-this.radius() && this.x<=gobbler[j].x+gobbler[j].radius()+this.radius() && this.y>=gobbler[j].y-gobbler[j].radius()-this.radius() && this.y<=gobbler[j].y+gobbler[j].radius()+this.radius()) {
 				//check attack and defense stats
@@ -306,7 +307,7 @@ function init() {
 					deathCount++;
 					//eat
 					this.energy += gobbler[j].energy;
-					gobbler.splice(j,1);
+					gobbler.splice(j, 1);
 					gobbler.length = gobbler.length;
 					this.eat();
 					break;
@@ -391,7 +392,7 @@ function init() {
 		}
 	};
 	//initial spawn
-	for (var i=0;i<intStartingGobblers;i++) {
+	for (i=0;i<intStartingGobblers;i++) {
 		var gobblerParams = {
 			x: 0,
 			y: 0,
@@ -412,7 +413,7 @@ function init() {
 }
 var running = true;
 function run() {
-	var i;
+
 	if (!running) {
 		return;
 	}
@@ -488,7 +489,7 @@ function draw() {
 	//lightLevel
 	canvas.style.background='rgb('+lightLevel+','+lightLevel+','+lightLevel+')';
 	//draw gobblers
-	for (var i=0; i < gobbler.length; i++) {
+	for (i=0; i < gobbler.length; i++) {
 		context.fillStyle=gobbler[i].color();
 		context.beginPath();
 		context.arc(gobbler[i].x,gobbler[i].y,gobbler[i].radius(),0,Math.PI*2,true);
