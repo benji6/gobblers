@@ -178,12 +178,12 @@ var analysisSwitch = document.createElement('button');
 var animateStyleSwitch = document.createElement('button');
 analysisSwitch.onfocus = function () {
 	if (this.blur) {
-		this.blur()
+		this.blur();
 	}
 };
 animateStyleSwitch.onfocus = function () {
 	if (this.blur) {
-		this.blur()
+		this.blur();
 	}
 };
 analysisSwitch.innerHTML = 'Analysis Switch';
@@ -257,7 +257,7 @@ function init() {
 		var r = (this.attackCoefficient / totalAttackCoefficient * gobbler.length * 127).toFixed(0);
 		var b = (this.defenceCoefficient / totalDefenceCoefficient * gobbler.length * 127).toFixed(0);
 		var g = (this.photosynthesisCoefficient / totalPhotosynthesisCoefficient * gobbler.length * 127).toFixed(0);
-		return 'rgb('+r+','+g+','+b+')'
+		return 'rgb('+r+','+g+','+b+')';
 	};
 	Gobbler.prototype.photosynthesize = function() {
 		var energyProduced = this.photosynthesisCoefficient * this.radius() * environment.light() * environment.carbonDioxideLevel / intStartingGobblers / 1000;
@@ -413,14 +413,13 @@ function init() {
 }
 var running = true;
 function run() {
-
 	if (!running) {
 		return;
 	}
 	requestAnimFrame(run);
 	//variable for analysis
 	if (analysisOn) {
-		var totalEnergy = 0;
+		totalEnergy = 0;
 		intOldestGen = intYoungestGen;
 		totalVelocityCoefficient = 0;
 	}
