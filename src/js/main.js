@@ -1,19 +1,7 @@
-var gobblers = (function() {
-
-//requestAnimFrame
-window.requestAnimFrame=(function() {
-	return  window.requestAnimationFrame ||
-	window.webkitRequestAnimationFrame ||
-	window.mozRequestAnimationFrame ||
-	function(callback) {
-		window.setTimeout(callback, 1000 / 60);
-	};
-})();
-
 //model
 //declaration and initialization
-var intStartingGobblers = 256;
-var intStartingGobblerEnergy = 6;
+const intStartingGobblers = 256;
+const intStartingGobblerEnergy = 6;
 var gobbler = [];
 var environment = {
 	light: function() {
@@ -91,16 +79,16 @@ var outputAvgPhot = document.createElement('output');
 	addTh('Output');
 	addTh('Gobbler Analysis');
 	addTh('Output');
-	
+
 	var tbody = analysisDisplay.appendChild(document.createElement('tbody'));
 	tr = tbody.appendChild(document.createElement('tr'));
 	addToTr = curryAddView(tr);
-	addTd = addToTr('td');
+	var addTd = addToTr('td');
 	addTd('Light Level');
 	tr.appendChild(outputLightLevel);
 	addTd('Average Energy');
 	tr.appendChild(outputEnergyPerGobbler);
-	
+
 	tr = tbody.appendChild(document.createElement('tr'));
 	addToTr = curryAddView(tr);
 	addTd = addToTr('td');
@@ -108,7 +96,7 @@ var outputAvgPhot = document.createElement('output');
 	tr.appendChild(outputOxygenLevel);
 	addTd('Average Velocity Coefficient');
 	tr.appendChild(outputAvgVel);
-	
+
 	tr = tbody.appendChild(document.createElement('tr'));
 	addToTr = curryAddView(tr);
 	addTd = addToTr('td');
@@ -116,7 +104,7 @@ var outputAvgPhot = document.createElement('output');
 	tr.appendChild(outputCO2Level);
 	addTd('Average Attack Coefficient');
 	tr.appendChild(outputAvgAtt);
-	
+
 	tr = tbody.appendChild(document.createElement('tr'));
 	addToTr = curryAddView(tr);
 	addTd = addToTr('td');
@@ -124,7 +112,7 @@ var outputAvgPhot = document.createElement('output');
 	tr.appendChild(outputTotalEnergy);
 	addTd('Average Defence Coefficient');
 	tr.appendChild(outputAvgDef);
-	
+
 	tr = tbody.appendChild(document.createElement('tr'));
 	addToTr = curryAddView(tr);
 	addTd = addToTr('td');
@@ -132,7 +120,7 @@ var outputAvgPhot = document.createElement('output');
 	tr.appendChild(outputIntGobblers);
 	addTd('Average Photosynthesis Coefficient');
 	tr.appendChild(outputAvgPhot);
-	
+
 	tr = tbody.appendChild(document.createElement('tr'));
 	addToTr = curryAddView(tr);
 	addTd = addToTr('td');
@@ -162,13 +150,10 @@ var outputAvgPhot = document.createElement('output');
 	addTd = addToTr('td');
 	addTd('Oldest Generation');
 	tr.appendChild(outputOldestGen);
-	
+
 	viewHolder.appendChild(controller);
 	controller.appendChild(analysisDisplay);
 }());
-function appendView() {
-	document.body.appendChild(viewHolder);
-}
 
 var animateStyle = false;
 //analysis
@@ -411,12 +396,9 @@ function init() {
 		gobbler[i].mutate();
 	}
 }
-var running = true;
+
 function run() {
-	if (!running) {
-		return;
-	}
-	requestAnimFrame(run);
+	window.requestAnimationFrame(run);
 	//variable for analysis
 	if (analysisOn) {
 		totalEnergy = 0;
@@ -497,20 +479,5 @@ function draw() {
 	}
 }
 
-function on() {
-	appendView();
-	running = true;
-	run();
-}
-
-function off() {
-	running = false;
-	viewHolder.parentNode && viewHolder.parentNode.removeChild(viewHolder);
-}
-
-return {
-	on: on,
-	off: off
-};
-}());
-gobblers.on();
+document.body.appendChild(viewHolder);
+run();
