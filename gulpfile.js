@@ -12,9 +12,9 @@ var source = require('vinyl-source-stream');
 var uglify = require('gulp-uglify');
 var watchify = require('watchify');
 
-var HTML_PATH = "src/index.html";
+var HTML_PATH = "src/html/index.html";
 var JS_PATH = "src/js/main.js";
-var SASS_PATH = "src/style.scss";
+var SASS_PATH = "src/sass/style.scss";
 var DIST_PATH = "dist";
 
 gulp.task("html", function () {
@@ -38,9 +38,10 @@ gulp.task("js", function () {
 
 gulp.task("sass", function () {
   gulp.src(SASS_PATH)
+    .pipe(plumber())
     .pipe(sass())
     .pipe(autoprefixer({
-      browsers: ['last 2 versions'],
+      browsers: ['last 3 versions'],
       cascade: false
     }))
     .pipe(minifyCSS())
@@ -49,7 +50,7 @@ gulp.task("sass", function () {
 
 gulp.task("watch", function () {
   gulp.start("js", "html", "sass");
-  gulp.watch(JS_PATH, ["js"]);
+  gulp.watch("src/js/**/*.js", ["js"]);
   gulp.watch(HTML_PATH, ["html"]);
   gulp.watch(SASS_PATH, ["sass"]);
 });

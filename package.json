@@ -34,5 +34,8 @@
   "jshintConfig": {
     "esnext": "true",
     "expr": "true"
+  },
+  "dependencies": {
+    "react": "^0.13.3"
   }
 }

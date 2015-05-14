@@ -1,3 +1,5 @@
+const View = require('./View.js');
+
 //model
 //declaration and initialization
 const intStartingGobblers = 256;
@@ -11,6 +13,8 @@ var environment = {
 	carbonDioxideLevel: intStartingGobblers * intStartingGobblerEnergy,
 	maxEvolutionPoints: 8
 };
+
+
 //view
 //Text View
 var viewHolder = document.createElement('div');
@@ -50,25 +54,6 @@ var outputAvgPhot = document.createElement('output');
 		parentEl.appendChild(childElement);
 	};
 	var curryAddView = curry(addView);
-
-	var addViewToVH = curryAddView(viewHolder);
-	var addH2 = addViewToVH('h2');
-	var addH3 = addViewToVH('h3');
-	var addP = addViewToVH('P');
-	var addDiv = addViewToVH('div');
-
-	addH2('Gobblers Evolution Simulator');
-	addH3('About');
-	addP('Below is an evolution simulator. ' +
-		'The canvas is populated with objects called gobblers. ' +
-		'Gobblers require energy to survive and can get energy by photosynthesizing or eating other gobblers. ' +
-		'The environment has a light level and oxygen and carbon dioxide levels. ' +
-		'The gobblers have a number of parameters which influence their behaviour and which can mutate with each successive generation.');
-	addH3('Key');
-	addP('The environment light level is visualized by the background color of the canvas.');
-	addP('The more red a gobbler is the more it leans towards attacking.');
-	addP('The more blue a gobbler is the more it leans towards defence.');
-	addP('The more green a gobbler is the more it leans towards photosynthesizing.');
 
 	var thead = analysisDisplay.appendChild(document.createElement('thead'));
 	var tr = thead.appendChild(document.createElement('tr'));
@@ -185,9 +170,13 @@ animateStyleSwitch.innerHTML = 'Animation Blur Effect';
 animateStyleSwitch.onclick = function() {
 	animateStyle = !animateStyle;
 };
-controller.appendChild(analysisSwitch);
-controller.appendChild(animateStyleSwitch);
 
+const buttonsContainer = document.createElement("div");
+buttonsContainer.className = "center";
+
+buttonsContainer.appendChild(analysisSwitch);
+buttonsContainer.appendChild(animateStyleSwitch);
+controller.appendChild(buttonsContainer);
 //view
 //canvas
 
@@ -195,7 +184,9 @@ var canvas = document.createElement('canvas');
 canvas.width = intStartingGobblers * 2;
 canvas.height = canvas.width;
 var context = canvas.getContext('2d');
-viewHolder.appendChild(canvas);
+const centerDiv = document.createElement("div");
+centerDiv.className = "center";
+viewHolder.appendChild(centerDiv).appendChild(canvas);
 //analysis
 var totalEnergy = 0;
 var eatCount = 0;
@@ -226,9 +217,9 @@ function init() {
 		this.generation = params.generation;
 	}
 	//Gobbler prototype
-	Gobbler.prototype.metabolism = .001;
+	Gobbler.prototype.metabolism = 0.001;
 	Gobbler.prototype.threshold = 12;
-	Gobbler.prototype.mutationCoefficient = .5;
+	Gobbler.prototype.mutationCoefficient = 0.5;
 	Gobbler.prototype.radius = function() {
 		return Math.sqrt(this.energy);
 	};
@@ -260,7 +251,7 @@ function init() {
 			if (this.x>=canvas.width-this.radius()-dblVel/2) {
 				this.x-=Math.random()/2*dblVel;
 			} else {
-				this.x+=(Math.random()-.5)*dblVel;
+				this.x+=(Math.random() - 0.5) * dblVel;
 			}
 		}
 		//y movement rules
@@ -271,7 +262,7 @@ function init() {
 				this.y-=Math.random()/2*dblVel;
 			}
 			else {
-				this.y+=(Math.random()-.5)*dblVel;
+				this.y+=(Math.random() - 0.5) * dblVel;
 			}
 		}
 		//reduce energy
@@ -308,7 +299,7 @@ function init() {
 			this.generation++;
 			//separate children
 			var displacementRadius = this.radius() * 2;
-			var xDisplacement = (Math.random()-.5) * 2 * displacementRadius;
+			var xDisplacement = (Math.random() - 0.5) * 2 * displacementRadius;
 			var yDisplacement = Math.sqrt(Math.pow(displacementRadius,2) - Math.pow(xDisplacement,2));
 			//new Gobbler
 			var parentGobbler = this;
@@ -340,9 +331,9 @@ function init() {
 		//mutate properties
 		var obj = this;
 		function subMutate(prop) {
-			prop += prop * (Math.random()-.5) * obj.mutationCoefficient;
+			prop += prop * (Math.random() - 0.5) * obj.mutationCoefficient;
 			if (prop < 0) {
-				prop = .000001;
+				prop = 0.000001;
 			}
 			return prop;
 		}
@@ -367,7 +358,7 @@ function init() {
 		environment.oxygenLevel -= energyUsed;
 		environment.carbonDioxideLevel += energyUsed;
 		//check for death
-		if (this.energy < .1) {
+		if (this.energy < 0.1) {
 			//analysis
 			deathCount++;
 			//release oxygen
@@ -383,8 +374,8 @@ function init() {
 			y: 0,
 			energy: intStartingGobblerEnergy,
 			v: 1,
-			attackCoefficient: .5,
-			defenceCoefficient: .5,
+			attackCoefficient: 0.5,
+			defenceCoefficient: 0.5,
 			generation: 0,
 			photosynthesisCoefficient: 1
 		};
