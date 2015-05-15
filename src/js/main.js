@@ -281,31 +281,19 @@ function run() {
 	//run methods
 	for (i=0; i < gobbler.length; i++) {
 		gobbler[i].photosynthesize();
-	}
-	for (i=0; i < gobbler.length; i++) {
 		gobbler[i].move();
-	}
-	for (i=0; i < gobbler.length; i++) {
 		gobbler[i].eat();
-	}
-	for (i=0; i < gobbler.length; i++) {
 		gobbler[i].reproduce();
-	}
-	for (i=0; i < gobbler.length; i++) {
-		//analysis
 		if (analysisOn) {
 			totalEnergy += gobbler[i].energy;
-			if (intOldestGen > gobbler[i].generation) {
-				intOldestGen = gobbler[i].generation;
-			}
+			intOldestGen = intOldestGen > gobbler[i].generation ?
+				gobbler[i].generation :
+				intOldestGen;
 			totalVelocityCoefficient += gobbler[i].v;
-
 		}
-		//required for color()
 		totalAttackCoefficient += gobbler[i].attackCoefficient;
 		totalDefenceCoefficient += gobbler[i].defenceCoefficient;
 		totalPhotosynthesisCoefficient += gobbler[i].photosynthesisCoefficient;
-		//die
 		gobbler[i].die();
 	}
 	if (analysisOn) {
@@ -340,7 +328,6 @@ function draw() {
 	}
 	//lightLevel
 	canvas.style.background='rgb('+lightLevel+','+lightLevel+','+lightLevel+')';
-	//draw gobblers
 	for (i=0; i < gobbler.length; i++) {
 		context.fillStyle=gobbler[i].color();
 		context.beginPath();
