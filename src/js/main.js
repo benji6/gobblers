@@ -1,4 +1,8 @@
-const View = require('./View.js');
+const DescriptionView = require('./DescriptionView.js');
+const AnalysisView = require('./AnalysisView.js');
+
+DescriptionView();
+analysisView = AnalysisView();
 
 //model
 //declaration and initialization
@@ -14,155 +18,29 @@ var environment = {
 	maxEvolutionPoints: 8
 };
 
-
-//view
-//Text View
 var viewHolder = document.createElement('div');
 var controller = document.createElement('div');
-var analysisDisplay = document.createElement('table');
-var outputLightLevel = document.createElement('output');
-var outputOxygenLevel = document.createElement('output');
-var outputCO2Level = document.createElement('output');
-var outputTotalEnergy = document.createElement('output');
-var outputIntGobblers = document.createElement('output');
-var outputEnergyPerGobbler = document.createElement('output');
-var outputEatCount = document.createElement('output');
-var outputReprCount = document.createElement('output');
-var outputDeathCount = document.createElement('output');
-var outputYoungestGen = document.createElement('output');
-var outputOldestGen = document.createElement('output');
-var outputAvgVel = document.createElement('output');
-var outputAvgAtt = document.createElement('output');
-var outputAvgDef = document.createElement('output');
-var outputAvgPhot = document.createElement('output');
 
-(function initView() {
-	var curry = function(func) {
-		var curried = function(args) {
-			if (args.length >= func.length) {
-				return func.apply(null, args);
-			}
-			return function() {
-				return curried(args.concat(Array.prototype.slice.apply(arguments)));
-			};
-		};
-		return curried(Array.prototype.slice.apply(arguments, [1]));
-	};
-	var addView = function(parentEl, childEl, txtNode) {
-		var childElement = document.createElement(childEl);
-		childElement.appendChild(document.createTextNode(txtNode));
-		parentEl.appendChild(childElement);
-	};
-	var curryAddView = curry(addView);
-
-	var thead = analysisDisplay.appendChild(document.createElement('thead'));
-	var tr = thead.appendChild(document.createElement('tr'));
-	var addToTr = curryAddView(tr);
-	var addTh = addToTr('th');
-
-	addTh('High-Level Analysis');
-	addTh('Output');
-	addTh('Gobbler Analysis');
-	addTh('Output');
-
-	var tbody = analysisDisplay.appendChild(document.createElement('tbody'));
-	tr = tbody.appendChild(document.createElement('tr'));
-	addToTr = curryAddView(tr);
-	var addTd = addToTr('td');
-	addTd('Light Level');
-	tr.appendChild(outputLightLevel);
-	addTd('Average Energy');
-	tr.appendChild(outputEnergyPerGobbler);
-
-	tr = tbody.appendChild(document.createElement('tr'));
-	addToTr = curryAddView(tr);
-	addTd = addToTr('td');
-	addTd('Oxygen Level');
-	tr.appendChild(outputOxygenLevel);
-	addTd('Average Velocity Coefficient');
-	tr.appendChild(outputAvgVel);
-
-	tr = tbody.appendChild(document.createElement('tr'));
-	addToTr = curryAddView(tr);
-	addTd = addToTr('td');
-	addTd('Carbon Dioxide Level');
-	tr.appendChild(outputCO2Level);
-	addTd('Average Attack Coefficient');
-	tr.appendChild(outputAvgAtt);
-
-	tr = tbody.appendChild(document.createElement('tr'));
-	addToTr = curryAddView(tr);
-	addTd = addToTr('td');
-	addTd('Total Energy');
-	tr.appendChild(outputTotalEnergy);
-	addTd('Average Defence Coefficient');
-	tr.appendChild(outputAvgDef);
-
-	tr = tbody.appendChild(document.createElement('tr'));
-	addToTr = curryAddView(tr);
-	addTd = addToTr('td');
-	addTd('Number of Gobblers');
-	tr.appendChild(outputIntGobblers);
-	addTd('Average Photosynthesis Coefficient');
-	tr.appendChild(outputAvgPhot);
-
-	tr = tbody.appendChild(document.createElement('tr'));
-	addToTr = curryAddView(tr);
-	addTd = addToTr('td');
-	addTd('Number of Eatings');
-	tr.appendChild(outputEatCount);
-
-	tr = tbody.appendChild(document.createElement('tr'));
-	addToTr = curryAddView(tr);
-	addTd = addToTr('td');
-	addTd('Reproduction Count');
-	tr.appendChild(outputReprCount);
-
-	tr = tbody.appendChild(document.createElement('tr'));
-	addToTr = curryAddView(tr);
-	addTd = addToTr('td');
-	addTd('Death Count');
-	tr.appendChild(outputDeathCount);
-
-	tr = tbody.appendChild(document.createElement('tr'));
-	addToTr = curryAddView(tr);
-	addTd = addToTr('td');
-	addTd('Youngest Generation');
-	tr.appendChild(outputYoungestGen);
-
-	tr = tbody.appendChild(document.createElement('tr'));
-	addToTr = curryAddView(tr);
-	addTd = addToTr('td');
-	addTd('Oldest Generation');
-	tr.appendChild(outputOldestGen);
-
-	viewHolder.appendChild(controller);
-	controller.appendChild(analysisDisplay);
-}());
+viewHolder.appendChild(controller);
 
 var animateStyle = false;
-//analysis
 var analysisOn = true;
 //controller
 var analysisSwitch = document.createElement('button');
 var animateStyleSwitch = document.createElement('button');
 analysisSwitch.onfocus = function () {
-	if (this.blur) {
-		this.blur();
-	}
+	this.blur && this.blur();
 };
 animateStyleSwitch.onfocus = function () {
-	if (this.blur) {
-		this.blur();
-	}
+	this.blur && this.blur();
 };
 analysisSwitch.innerHTML = 'Analysis Switch';
 analysisSwitch.onclick = function () {
 	analysisOn = !analysisOn;
 	if (analysisOn) {
-		analysisDisplay.style.display = '';
+		analysisView.container.className = "";
 	} else {
-		analysisDisplay.style.display = 'none';
+		analysisView.container.className = "hidden";
 	}
 };
 
@@ -431,21 +309,23 @@ function run() {
 		gobbler[i].die();
 	}
 	if (analysisOn) {
-		outputLightLevel.innerHTML = environment.light().toFixed(2);
-		outputOxygenLevel.innerHTML = environment.oxygenLevel.toFixed(0);
-		outputCO2Level.innerHTML = environment.carbonDioxideLevel.toFixed(0);
-		outputTotalEnergy.innerHTML = totalEnergy.toFixed(0);
-		outputIntGobblers.innerHTML = gobbler.length;
-		outputEnergyPerGobbler.innerHTML = (totalEnergy/gobbler.length).toFixed(2);
-		outputEatCount.innerHTML = eatCount;
-		outputReprCount.innerHTML = reproductionCount;
-		outputDeathCount.innerHTML = deathCount;
-		outputYoungestGen.innerHTML = intYoungestGen;
-		outputOldestGen.innerHTML = intOldestGen;
-		outputAvgVel.innerHTML = (totalVelocityCoefficient / gobbler.length).toFixed(2);
-		outputAvgAtt.innerHTML = (totalAttackCoefficient / gobbler.length).toFixed(2);
-		outputAvgDef.innerHTML = (totalDefenceCoefficient / gobbler.length).toFixed(2);
-		outputAvgPhot.innerHTML = (totalPhotosynthesisCoefficient / gobbler.length).toFixed(2);
+		analysisView.render({
+			lightLevel: environment.light().toFixed(2),
+			oxygenLevel: environment.oxygenLevel.toFixed(0),
+			averageEnergy: (totalEnergy / gobbler.length).toFixed(2),
+			averageVelocityCoefficient: (totalVelocityCoefficient / gobbler.length).toFixed(2),
+			carbonDioxideLevel: environment.carbonDioxideLevel.toFixed(0),
+			averageAttackCoefficient: (totalAttackCoefficient / gobbler.length).toFixed(2),
+			totalEnergy: totalEnergy.toFixed(0),
+			averageDefenceCoefficient: (totalDefenceCoefficient / gobbler.length).toFixed(2),
+			numberOfGobblers: gobbler.length,
+			averagePhotosynthesisCoefficient: (totalPhotosynthesisCoefficient / gobbler.length).toFixed(2),
+			eatCount,
+			reproductionCount,
+			deathCount,
+			intYoungestGen,
+			intOldestGen,
+		});
 	}
 	draw();
 }
