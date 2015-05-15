@@ -1,8 +1,11 @@
 const DescriptionView = require('./DescriptionView.js');
 const AnalysisView = require('./AnalysisView.js');
+const CanvasView = require('./CanvasView.js');
 
 DescriptionView();
-analysisView = AnalysisView();
+
+const analysisView = AnalysisView();
+const canvasView = CanvasView();
 
 //model
 //declaration and initialization
@@ -55,16 +58,7 @@ buttonsContainer.className = "center";
 buttonsContainer.appendChild(analysisSwitch);
 buttonsContainer.appendChild(animateStyleSwitch);
 controller.appendChild(buttonsContainer);
-//view
-//canvas
 
-var canvas = document.createElement('canvas');
-canvas.width = intStartingGobblers * 2;
-canvas.height = canvas.width;
-var context = canvas.getContext('2d');
-const centerDiv = document.createElement("div");
-centerDiv.className = "center";
-viewHolder.appendChild(centerDiv).appendChild(canvas);
 //analysis
 var totalEnergy = 0;
 var eatCount = 0;
@@ -77,8 +71,6 @@ var totalAttackCoefficient = 0;
 var totalDefenceCoefficient = 0;
 var totalPhotosynthesisCoefficient = 0;
 
-//model
-//init
 init();
 //i is currently at this level as run funciton and methods in gobbler prototype require it... needs to change...
 var i;
@@ -126,7 +118,7 @@ function init() {
 		if (this.x<=this.radius()+dblVel) {
 			this.x+=Math.random()/2*dblVel;
 		} else {
-			if (this.x>=canvas.width-this.radius()-dblVel/2) {
+			if (this.x>=canvasView.canvas.width-this.radius()-dblVel/2) {
 				this.x-=Math.random()/2*dblVel;
 			} else {
 				this.x+=(Math.random() - 0.5) * dblVel;
@@ -136,7 +128,7 @@ function init() {
 		if (this.y<=this.radius()+dblVel) {
 			this.y+=Math.random()/2*dblVel;
 		} else {
-			if (this.y>=canvas.height-this.radius()-dblVel/2) {
+			if (this.y>=canvasView.canvas.height-this.radius()-dblVel/2) {
 				this.y-=Math.random()/2*dblVel;
 			}
 			else {
@@ -144,7 +136,7 @@ function init() {
 			}
 		}
 		//reduce energy
-		var energyUsed = this.energy * dblVel / canvas.width / 8;
+		var energyUsed = this.energy * dblVel / canvasView.canvas.width / 8;
 		this.energy -= energyUsed;
 		environment.oxygenLevel -= energyUsed;
 		environment.carbonDioxideLevel += energyUsed;
@@ -259,8 +251,8 @@ function init() {
 		};
 		gobbler[i] = new Gobbler(gobblerParams);
 		//initial position (dependent on radius method of object)
-		gobbler[i].x = Math.random()*(canvas.width-2*gobbler[i].radius())+gobbler[i].radius();
-		gobbler[i].y = Math.random()*(canvas.height-2*gobbler[i].radius())+gobbler[i].radius();
+		gobbler[i].x = Math.random()*(canvasView.canvas.width-2*gobbler[i].radius())+gobbler[i].radius();
+		gobbler[i].y = Math.random()*(canvasView.canvas.height-2*gobbler[i].radius())+gobbler[i].radius();
 		//initial variation
 		gobbler[i].mutate();
 	}
@@ -315,26 +307,24 @@ function run() {
 			intOldestGen,
 		});
 	}
-	draw();
-}
-function draw() {
-	var lightLevel = ((environment.light())*255).toFixed(0);
-	//clear canvas
-	if(animateStyle) {
-		context.fillStyle = 'rgba('+lightLevel+','+lightLevel+','+lightLevel+', .17)';
-		context.fillRect(0, 0, canvas.width, canvas.height);
-	} else {
-		context.clearRect(0,0,canvas.width,canvas.height);
-	}
-	//lightLevel
-	canvas.style.background='rgb('+lightLevel+','+lightLevel+','+lightLevel+')';
-	for (i=0; i < gobbler.length; i++) {
-		context.fillStyle=gobbler[i].color();
-		context.beginPath();
-		context.arc(gobbler[i].x,gobbler[i].y,gobbler[i].radius(),0,Math.PI*2,true);
-		context.closePath();
-		context.fill();
-	}
+	canvasView.render(function (context) {
+		var lightLevel = ((environment.light())*255).toFixed(0);
+		if(animateStyle) {
+			context.fillStyle = 'rgba('+lightLevel+','+lightLevel+','+lightLevel+', .17)';
+			context.fillRect(0, 0, canvasView.canvas.width, canvasView.canvas.height);
+		} else {
+			context.clearRect(0,0,canvasView.canvas.width,canvasView.canvas.height);
+		}
+		//lightLevel
+		canvasView.canvas.style.background='rgb('+lightLevel+','+lightLevel+','+lightLevel+')';
+		for (i=0; i < gobbler.length; i++) {
+			context.fillStyle=gobbler[i].color();
+			context.beginPath();
+			context.arc(gobbler[i].x,gobbler[i].y,gobbler[i].radius(),0,Math.PI*2,true);
+			context.closePath();
+			context.fill();
+		}
+	});
 }
 
 document.body.appendChild(viewHolder);
