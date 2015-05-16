@@ -13,7 +13,6 @@ const canvasView = CanvasView();
 //declaration and initialization
 const intStartingGobblers = 256;
 const intStartingGobblerEnergy = 6;
-var gobblers = [];
 var environment = {
 	light: function() {
 		return (Math.sin(Date.now() / 10000) + 1) / 2;
@@ -35,6 +34,8 @@ var totalAttackCoefficient = 0;
 var totalDefenceCoefficient = 0;
 var totalPhotosynthesisCoefficient = 0;
 
+var i;
+
 function Gobbler(params) {
 	this.energy = params.energy;
 	this.x = params.x;
@@ -46,6 +47,12 @@ function Gobbler(params) {
 	this.generation = params.generation;
 }
 
+Gobbler.prototype.init = function () {
+	this.x = Math.random() * (canvasView.canvas.width - 2 * this.radius()) + this.radius();
+	this.y = Math.random() * (canvasView.canvas.height - 2 * this.radius()) + this.radius();
+	this.mutate();
+	return this;
+};
 Gobbler.prototype.metabolism = 0.001;
 Gobbler.prototype.threshold = 12;
 Gobbler.prototype.mutationCoefficient = 0.5;
@@ -191,25 +198,23 @@ Gobbler.prototype.die = function() {
 	}
 };
 //initial spawn
-for (var i=0;i<intStartingGobblers;i++) {
-	var gobblerParams = {
-		x: 0,
-		y: 0,
-		energy: intStartingGobblerEnergy,
-		v: 1,
-		attackCoefficient: 0.5,
-		defenceCoefficient: 0.5,
-		generation: 0,
-		photosynthesisCoefficient: 1
-	};
-	gobblers[i] = new Gobbler(gobblerParams);
-	gobblers[i].x = Math.random()*(canvasView.canvas.width-2*gobblers[i].radius())+gobblers[i].radius();
-	gobblers[i].y = Math.random()*(canvasView.canvas.height-2*gobblers[i].radius())+gobblers[i].radius();
-	gobblers[i].mutate();
-}
+var gobblerParams = {
+	x: 0,
+	y: 0,
+	energy: intStartingGobblerEnergy,
+	v: 1,
+	attackCoefficient: 0.5,
+	defenceCoefficient: 0.5,
+	generation: 0,
+	photosynthesisCoefficient: 1
+};
 
-function run() {
-	window.requestAnimationFrame(run);
+const gobblers = R.map(() =>
+	new Gobbler(gobblerParams).init(), R.repeat(0, intStartingGobblers));
+
+
+(function loop () {
+	window.requestAnimationFrame(loop);
 	totalEnergy = 0;
 	intOldestGen = intYoungestGen;
 	totalVelocityCoefficient = 0;
@@ -255,6 +260,4 @@ function run() {
 		gobblers,
 		lightLevel: (environment.light() * 255).toFixed(0),
 	});
-}
-
-run();
+}());
