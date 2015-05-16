@@ -55,7 +55,7 @@ gulp.task("sass", function () {
     .pipe(plumber())
     .pipe(sass())
     .pipe(autoprefixer({
-      browsers: ["> 0.1%", "last 3 versions"],
+      browsers: ["> 1%", "last 3 versions"],
       cascade: false
     }))
     .pipe(minifyCSS())
