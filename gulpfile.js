@@ -1,21 +1,23 @@
-var autoprefixer = require('gulp-autoprefixer');
-var babel = require('gulp-babel');
-var buffer = require('vinyl-buffer');
-var browserify = require('browserify');
-var gulp = require('gulp');
-var gutil = require('gulp-util');
-var minifyCSS = require('gulp-minify-css');
-var minifyHTML = require('gulp-minify-html');
-var plumber = require('gulp-plumber');
-var sass = require('gulp-sass');
-var source = require('vinyl-source-stream');
-var uglify = require('gulp-uglify');
-var watchify = require('watchify');
+const autoprefixer = require('gulp-autoprefixer');
+const babel = require('gulp-babel');
+const buffer = require('vinyl-buffer');
+const browserify = require('browserify');
+const gulp = require('gulp');
+const gutil = require('gulp-util');
+const minifyCSS = require('gulp-minify-css');
+const minifyHTML = require('gulp-minify-html');
+const plumber = require('gulp-plumber');
+const R = require('ramda');
+const sass = require('gulp-sass');
+const source = require('vinyl-source-stream');
+const sourcemaps = require('gulp-sourcemaps');
+const uglify = require('gulp-uglify');
+const watchify = require('watchify');
 
-var HTML_PATH = "src/html/index.html";
-var JS_PATH = "src/js/main.js";
-var SASS_PATH = "src/sass/style.scss";
-var DIST_PATH = "dist";
+const HTML_PATH = "src/html/index.html";
+const JS_PATH = "src/js/main.js";
+const SASS_PATH = "src/sass/style.scss";
+const DIST_PATH = "dist";
 
 gulp.task("html", function () {
   gulp.src(HTML_PATH)
@@ -23,13 +25,27 @@ gulp.task("html", function () {
     .pipe(gulp.dest(DIST_PATH));
 });
 
-gulp.task("js", function () {
-  var bundler = watchify(browserify(JS_PATH, watchify.args));
+gulp.task("jsDev", function () {
+  const bundler = watchify(browserify(JS_PATH, R.assoc("debug", true, watchify.args)));
 
   bundler.bundle()
     .on('error', gutil.log.bind(gutil, 'Browserify Error'))
     .pipe(source("bundle.js"))
     .pipe(plumber())
+    .pipe(buffer())
+    .pipe(sourcemaps.init({loadMaps: true}))
+    .pipe(babel())
+    .pipe(uglify())
+    .pipe(sourcemaps.write())
+    .pipe(gulp.dest('dist'));
+});
+
+gulp.task("jsProd", function () {
+  const bundler = watchify(browserify(JS_PATH, watchify.args));
+
+  bundler.bundle()
+    .on('error', gutil.log.bind(gutil, 'Browserify Error'))
+    .pipe(source("bundle.js"))
     .pipe(buffer())
     .pipe(babel())
     .pipe(uglify())
@@ -49,11 +65,11 @@ gulp.task("sass", function () {
 });
 
 gulp.task("watch", function () {
-  gulp.start("js", "html", "sass");
-  gulp.watch("src/js/**/*.js", ["js"]);
+  gulp.start("jsDev", "html", "sass");
+  gulp.watch("src/js/**/*.js", ["jsDev"]);
   gulp.watch(HTML_PATH, ["html"]);
   gulp.watch(SASS_PATH, ["sass"]);
 });
 
-gulp.task("build", ["js", "html", "sass"]);
+gulp.task("build", ["jsProd", "html", "sass"]);
 gulp.task("default", ["watch"]);
