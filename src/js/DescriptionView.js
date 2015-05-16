@@ -6,7 +6,7 @@ module.exports = function () {
   const View = React.createClass({
     render: function () {
       return React.DOM.div(null, [
-        React.DOM.h2(null, "Gobblers Evolution Simulator"),
+        React.DOM.h1(null, "Gobblers Evolution Simulator"),
         React.DOM.h3(null, "About"),
         React.DOM.p(null, `Below is an evolution simulator.
       		The canvas is populated with objects called gobblers.
