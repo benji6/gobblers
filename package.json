@@ -25,8 +25,10 @@
     "gulp-minify-html": "^1.0.2",
     "gulp-plumber": "^1.0.0",
     "gulp-sass": "^2.0.0",
+    "gulp-sourcemaps": "^1.5.2",
     "gulp-uglify": "^1.2.0",
     "gulp-util": "^3.0.4",
+    "ramda": "^0.14.0",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
     "watchify": "^3.2.1"
