@@ -1,65 +1,66 @@
 const React = require('react');
 
 module.exports = function () {
+  var i = 0;
   const View = React.createClass({
     render: function () {
       return React.DOM.table(null, [
-        React.DOM.thead(null, [
-          React.DOM.th(null, "High-Level Analysis"),
-          React.DOM.th(null, "Output"),
-          React.DOM.th(null, "Gobbler Analysis"),
-          React.DOM.th(null, "Output"),
+        React.DOM.thead({key: i++}, [
+          React.DOM.th({key: i++}, "High-Level Analysis"),
+          React.DOM.th({key: i++}, "Output"),
+          React.DOM.th({key: i++}, "Gobbler Analysis"),
+          React.DOM.th({key: i++}, "Output"),
         ]),
-        React.DOM.tbody(null, [
-          React.DOM.tr(null, [
-            React.DOM.td(null, "Light Level"),
-            React.DOM.td(null, this.props.lightLevel),
-            React.DOM.td(null, "Average Energy"),
-            React.DOM.td(null, this.props.averageEnergy),
+        React.DOM.tbody({key: i++}, [
+          React.DOM.tr({key: i++}, [
+            React.DOM.td({key: i++}, "Light Level"),
+            React.DOM.td({key: i++}, this.props.lightLevel),
+            React.DOM.td({key: i++}, "Average Energy"),
+            React.DOM.td({key: i++}, this.props.averageEnergy),
           ]),
-          React.DOM.tr(null, [
-            React.DOM.td(null, "Oxygen Level"),
-            React.DOM.td(null, this.props.oxygenLevel),
-            React.DOM.td(null, "Average Velocity Coefficient"),
-            React.DOM.td(null, this.props.averageVelocityCoefficient),
+          React.DOM.tr({key: i++}, [
+            React.DOM.td({key: i++}, "Oxygen Level"),
+            React.DOM.td({key: i++}, this.props.oxygenLevel),
+            React.DOM.td({key: i++}, "Average Velocity Coefficient"),
+            React.DOM.td({key: i++}, this.props.averageVelocityCoefficient),
           ]),
-          React.DOM.tr(null, [
-            React.DOM.td(null, "Carbon Dioxide Level"),
-            React.DOM.td(null, this.props.carbonDioxideLevel),
-            React.DOM.td(null, "Average Attack Coefficient"),
-            React.DOM.td(null, this.props.averageAttackCoefficient),
+          React.DOM.tr({key: i++}, [
+            React.DOM.td({key: i++}, "Carbon Dioxide Level"),
+            React.DOM.td({key: i++}, this.props.carbonDioxideLevel),
+            React.DOM.td({key: i++}, "Average Attack Coefficient"),
+            React.DOM.td({key: i++}, this.props.averageAttackCoefficient),
           ]),
-          React.DOM.tr(null, [
-            React.DOM.td(null, "Total Energy"),
-            React.DOM.td(null, this.props.totalEnergy),
-            React.DOM.td(null, "Average Defence Coefficient"),
-            React.DOM.td(null, this.props.averageDefenceCoefficient),
+          React.DOM.tr({key: i++}, [
+            React.DOM.td({key: i++}, "Total Energy"),
+            React.DOM.td({key: i++}, this.props.totalEnergy),
+            React.DOM.td({key: i++}, "Average Defence Coefficient"),
+            React.DOM.td({key: i++}, this.props.averageDefenceCoefficient),
           ]),
-          React.DOM.tr(null, [
-            React.DOM.td(null, "Number of Gobblers"),
-            React.DOM.td(null, this.props.numberOfGobblers),
-            React.DOM.td(null, "Average Photosynthesis Coefficient"),
-            React.DOM.td(null, this.props.averagePhotosynthesisCoefficient),
+          React.DOM.tr({key: i++}, [
+            React.DOM.td({key: i++}, "Number of Gobblers"),
+            React.DOM.td({key: i++}, this.props.numberOfGobblers),
+            React.DOM.td({key: i++}, "Average Photosynthesis Coefficient"),
+            React.DOM.td({key: i++}, this.props.averagePhotosynthesisCoefficient),
           ]),
-          React.DOM.tr(null, [
-            React.DOM.td(null, "Number of Eatings"),
-            React.DOM.td(null, this.props.eatCount),
+          React.DOM.tr({key: i++}, [
+            React.DOM.td({key: i++}, "Number of Eatings"),
+            React.DOM.td({key: i++}, this.props.eatCount),
           ]),
-          React.DOM.tr(null, [
-            React.DOM.td(null, "Reproduction Count"),
-            React.DOM.td(null, this.props.reproductionCount),
+          React.DOM.tr({key: i++}, [
+            React.DOM.td({key: i++}, "Reproduction Count"),
+            React.DOM.td({key: i++}, this.props.reproductionCount),
           ]),
-          React.DOM.tr(null, [
-            React.DOM.td(null, "Death Count"),
-            React.DOM.td(null, this.props.deathCount),
+          React.DOM.tr({key: i++}, [
+            React.DOM.td({key: i++}, "Death Count"),
+            React.DOM.td({key: i++}, this.props.deathCount),
           ]),
-          React.DOM.tr(null, [
-            React.DOM.td(null, "Youngest Generation"),
-            React.DOM.td(null, this.props.intYoungestGen),
+          React.DOM.tr({key: i++}, [
+            React.DOM.td({key: i++}, "Youngest Generation"),
+            React.DOM.td({key: i++}, this.props.intYoungestGen),
           ]),
-          React.DOM.tr(null, [
-            React.DOM.td(null, "Oldest Generation"),
-            React.DOM.td(null, this.props.intOldestGen),
+          React.DOM.tr({key: i++}, [
+            React.DOM.td({key: i++}, "Oldest Generation"),
+            React.DOM.td({key: i++}, this.props.intOldestGen),
           ]),
         ])
       ]);
