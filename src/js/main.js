@@ -11,7 +11,7 @@ const canvasView = CanvasView();
 //declaration and initialization
 const intStartingGobblers = 256;
 const intStartingGobblerEnergy = 6;
-var gobbler = [];
+var gobblers = [];
 var environment = {
 	light: function() {
 		return (Math.sin(Date.now() / 10000) + 1) / 2;
@@ -61,9 +61,9 @@ function init() {
 		return this.defenceCoefficient * this.energy;
 	};
 	Gobbler.prototype.color = function() {
-		var r = (this.attackCoefficient / totalAttackCoefficient * gobbler.length * 127).toFixed(0);
-		var b = (this.defenceCoefficient / totalDefenceCoefficient * gobbler.length * 127).toFixed(0);
-		var g = (this.photosynthesisCoefficient / totalPhotosynthesisCoefficient * gobbler.length * 127).toFixed(0);
+		var r = (this.attackCoefficient / totalAttackCoefficient * gobblers.length * 127).toFixed(0);
+		var b = (this.defenceCoefficient / totalDefenceCoefficient * gobblers.length * 127).toFixed(0);
+		var g = (this.photosynthesisCoefficient / totalPhotosynthesisCoefficient * gobblers.length * 127).toFixed(0);
 		return 'rgb('+r+','+g+','+b+')';
 	};
 	Gobbler.prototype.photosynthesize = function() {
@@ -103,18 +103,18 @@ function init() {
 		environment.carbonDioxideLevel += energyUsed;
 	};
 	Gobbler.prototype.eat = function() {
-		for (var j = i + 1; j < gobbler.length; j++) {
+		for (var j = i + 1; j < gobblers.length; j++) {
 			//check contact
-			if(this.x>=gobbler[j].x-gobbler[j].radius()-this.radius() && this.x<=gobbler[j].x+gobbler[j].radius()+this.radius() && this.y>=gobbler[j].y-gobbler[j].radius()-this.radius() && this.y<=gobbler[j].y+gobbler[j].radius()+this.radius()) {
+			if(this.x>=gobblers[j].x-gobblers[j].radius()-this.radius() && this.x<=gobblers[j].x+gobblers[j].radius()+this.radius() && this.y>=gobblers[j].y-gobblers[j].radius()-this.radius() && this.y<=gobblers[j].y+gobblers[j].radius()+this.radius()) {
 				//check attack and defense stats
-				if (this.attack()>=gobbler[j].defence()) {
+				if (this.attack()>=gobblers[j].defence()) {
 					//analysis
 					eatCount++;
 					deathCount++;
 					//eat
-					this.energy += gobbler[j].energy;
-					gobbler.splice(j, 1);
-					gobbler.length = gobbler.length;
+					this.energy += gobblers[j].energy;
+					gobblers.splice(j, 1);
+					gobblers.length = gobblers.length;
 					this.eat();
 					break;
 				}
@@ -143,17 +143,17 @@ function init() {
 				generation: parentGobbler.generation,
 				photosynthesisCoefficient: parentGobbler.photosynthesisCoefficient
 			};
-			gobbler[gobbler.length] = new Gobbler(gobblerParams);
+			gobblers[gobblers.length] = new Gobbler(gobblerParams);
 			this.x += xDisplacement;
 			this.y += yDisplacement;
 			//split energy
 			this.energy = this.energy/2;
 			//mutate
 			this.mutate();
-			gobbler[gobbler.length - 1].mutate();
+			gobblers[gobblers.length - 1].mutate();
 			//analysis
 			if (intYoungestGen < this.generation) {
-				intYoungestGen = gobbler[i].generation;
+				intYoungestGen = gobblers[i].generation;
 			}
 		}
 	};
@@ -193,7 +193,7 @@ function init() {
 			deathCount++;
 			//release oxygen
 			environment.oxygenLevel += this.energy;
-			gobbler.splice(i,1);
+			gobblers.splice(i,1);
 		}
 	};
 	//initial spawn
@@ -208,10 +208,10 @@ function init() {
 			generation: 0,
 			photosynthesisCoefficient: 1
 		};
-		gobbler[i] = new Gobbler(gobblerParams);
-		gobbler[i].x = Math.random()*(canvasView.canvas.width-2*gobbler[i].radius())+gobbler[i].radius();
-		gobbler[i].y = Math.random()*(canvasView.canvas.height-2*gobbler[i].radius())+gobbler[i].radius();
-		gobbler[i].mutate();
+		gobblers[i] = new Gobbler(gobblerParams);
+		gobblers[i].x = Math.random()*(canvasView.canvas.width-2*gobblers[i].radius())+gobblers[i].radius();
+		gobblers[i].y = Math.random()*(canvasView.canvas.height-2*gobblers[i].radius())+gobblers[i].radius();
+		gobblers[i].mutate();
 	}
 }
 
@@ -224,33 +224,33 @@ function run() {
 	totalAttackCoefficient = 0;
 	totalDefenceCoefficient = 0;
 
-	for (i=0; i < gobbler.length; i++) {
-		gobbler[i].photosynthesize();
-		gobbler[i].move();
-		gobbler[i].eat();
-		gobbler[i].reproduce();
-		totalEnergy += gobbler[i].energy;
-		intOldestGen = intOldestGen > gobbler[i].generation ?
-			gobbler[i].generation :
+	for (i=0; i < gobblers.length; i++) {
+		gobblers[i].photosynthesize();
+		gobblers[i].move();
+		gobblers[i].eat();
+		gobblers[i].reproduce();
+		totalEnergy += gobblers[i].energy;
+		intOldestGen = intOldestGen > gobblers[i].generation ?
+			gobblers[i].generation :
 			intOldestGen;
-		totalVelocityCoefficient += gobbler[i].v;
-		totalAttackCoefficient += gobbler[i].attackCoefficient;
-		totalDefenceCoefficient += gobbler[i].defenceCoefficient;
-		totalPhotosynthesisCoefficient += gobbler[i].photosynthesisCoefficient;
-		gobbler[i].die();
+		totalVelocityCoefficient += gobblers[i].v;
+		totalAttackCoefficient += gobblers[i].attackCoefficient;
+		totalDefenceCoefficient += gobblers[i].defenceCoefficient;
+		totalPhotosynthesisCoefficient += gobblers[i].photosynthesisCoefficient;
+		gobblers[i].die();
 	}
 
 	analysisView.render({
 		lightLevel: environment.light().toFixed(2),
 		oxygenLevel: environment.oxygenLevel.toFixed(0),
-		averageEnergy: (totalEnergy / gobbler.length).toFixed(2),
-		averageVelocityCoefficient: (totalVelocityCoefficient / gobbler.length).toFixed(2),
+		averageEnergy: (totalEnergy / gobblers.length).toFixed(2),
+		averageVelocityCoefficient: (totalVelocityCoefficient / gobblers.length).toFixed(2),
 		carbonDioxideLevel: environment.carbonDioxideLevel.toFixed(0),
-		averageAttackCoefficient: (totalAttackCoefficient / gobbler.length).toFixed(2),
+		averageAttackCoefficient: (totalAttackCoefficient / gobblers.length).toFixed(2),
 		totalEnergy: totalEnergy.toFixed(0),
-		averageDefenceCoefficient: (totalDefenceCoefficient / gobbler.length).toFixed(2),
-		numberOfGobblers: gobbler.length,
-		averagePhotosynthesisCoefficient: (totalPhotosynthesisCoefficient / gobbler.length).toFixed(2),
+		averageDefenceCoefficient: (totalDefenceCoefficient / gobblers.length).toFixed(2),
+		numberOfGobblers: gobblers.length,
+		averagePhotosynthesisCoefficient: (totalPhotosynthesisCoefficient / gobblers.length).toFixed(2),
 		eatCount,
 		reproductionCount,
 		deathCount,
@@ -259,7 +259,7 @@ function run() {
 	});
 
 	canvasView.render({
-		gobblers :gobbler,
+		gobblers,
 		lightLevel: (environment.light() * 255).toFixed(0),
 	});
 }
