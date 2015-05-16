@@ -34,7 +34,6 @@ var totalDefenceCoefficient = 0;
 var totalPhotosynthesisCoefficient = 0;
 
 init();
-//i is currently at this level as run funciton and methods in gobbler prototype require it... needs to change...
 var i;
 function init() {
 	//Gobbler constructor
@@ -104,7 +103,6 @@ function init() {
 		environment.carbonDioxideLevel += energyUsed;
 	};
 	Gobbler.prototype.eat = function() {
-		//check against all gobblers not yet checked against
 		for (var j = i + 1; j < gobbler.length; j++) {
 			//check contact
 			if(this.x>=gobbler[j].x-gobbler[j].radius()-this.radius() && this.x<=gobbler[j].x+gobbler[j].radius()+this.radius() && this.y>=gobbler[j].y-gobbler[j].radius()-this.radius() && this.y<=gobbler[j].y+gobbler[j].radius()+this.radius()) {
@@ -195,7 +193,6 @@ function init() {
 			deathCount++;
 			//release oxygen
 			environment.oxygenLevel += this.energy;
-			//remove gobbler
 			gobbler.splice(i,1);
 		}
 	};
@@ -212,10 +209,8 @@ function init() {
 			photosynthesisCoefficient: 1
 		};
 		gobbler[i] = new Gobbler(gobblerParams);
-		//initial position (dependent on radius method of object)
 		gobbler[i].x = Math.random()*(canvasView.canvas.width-2*gobbler[i].radius())+gobbler[i].radius();
 		gobbler[i].y = Math.random()*(canvasView.canvas.height-2*gobbler[i].radius())+gobbler[i].radius();
-		//initial variation
 		gobbler[i].mutate();
 	}
 }
@@ -225,11 +220,10 @@ function run() {
 	totalEnergy = 0;
 	intOldestGen = intYoungestGen;
 	totalVelocityCoefficient = 0;
-	//required for color()
 	totalPhotosynthesisCoefficient = 0;
 	totalAttackCoefficient = 0;
 	totalDefenceCoefficient = 0;
-	//run methods
+
 	for (i=0; i < gobbler.length; i++) {
 		gobbler[i].photosynthesize();
 		gobbler[i].move();
@@ -245,6 +239,7 @@ function run() {
 		totalPhotosynthesisCoefficient += gobbler[i].photosynthesisCoefficient;
 		gobbler[i].die();
 	}
+
 	analysisView.render({
 		lightLevel: environment.light().toFixed(2),
 		oxygenLevel: environment.oxygenLevel.toFixed(0),
@@ -262,18 +257,10 @@ function run() {
 		intYoungestGen,
 		intOldestGen,
 	});
-	canvasView.render(function (context) {
-		var lightLevel = ((environment.light())*255).toFixed(0);
-		context.clearRect(0,0,canvasView.canvas.width,canvasView.canvas.height);
-		//lightLevel
-		canvasView.canvas.style.background='rgb('+lightLevel+','+lightLevel+','+lightLevel+')';
-		for (i=0; i < gobbler.length; i++) {
-			context.fillStyle=gobbler[i].color();
-			context.beginPath();
-			context.arc(gobbler[i].x,gobbler[i].y,gobbler[i].radius(),0,Math.PI*2,true);
-			context.closePath();
-			context.fill();
-		}
+
+	canvasView.render({
+		gobblers :gobbler,
+		lightLevel: (environment.light() * 255).toFixed(0),
 	});
 }
 

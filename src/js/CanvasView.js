@@ -1,3 +1,5 @@
+const R = require('ramda');
+
 module.exports = function () {
   const centerDiv = document.createElement("div");
   centerDiv.className = "center";
@@ -9,8 +11,16 @@ module.exports = function () {
 
   return {
     canvas,
-    render: function (fn) {
-      fn(context);
+    render: function ({gobblers, lightLevel}) {
+      context.fillStyle = `rgb(${lightLevel}, ${lightLevel}, ${lightLevel})`;
+      context.fillRect(0, 0, canvas.width, canvas.height);
+      R.forEach((gobbler) => {
+        context.fillStyle = gobbler.color();
+        context.beginPath();
+        context.arc(gobbler.x, gobbler.y, gobbler.radius(), 0, 2 * Math.PI, true);
+        context.closePath();
+        context.fill();
+      }, gobblers);
     }
   };
 };
