@@ -1,0 +1,26 @@
+$white: #eee;
+$black: #111;
+
+body {
+  font-family: sans-serif;
+  background-color: $black;
+  color: $white;
+}
+
+button {
+  margin: 1em;
+  width: 12em;
+}
+
+div.center {
+  text-align: center;
+}
+
+table {
+  margin: auto;
+  text-align: left;
+}
+
+.hidden {
+  display: none;
+}
