@@ -21,44 +21,6 @@ var environment = {
 	maxEvolutionPoints: 8
 };
 
-var viewHolder = document.createElement('div');
-var controller = document.createElement('div');
-
-viewHolder.appendChild(controller);
-
-var animateStyle = false;
-var analysisOn = true;
-//controller
-var analysisSwitch = document.createElement('button');
-var animateStyleSwitch = document.createElement('button');
-analysisSwitch.onfocus = function () {
-	this.blur && this.blur();
-};
-animateStyleSwitch.onfocus = function () {
-	this.blur && this.blur();
-};
-analysisSwitch.innerHTML = 'Analysis Switch';
-analysisSwitch.onclick = function () {
-	analysisOn = !analysisOn;
-	if (analysisOn) {
-		analysisView.container.className = "";
-	} else {
-		analysisView.container.className = "hidden";
-	}
-};
-
-animateStyleSwitch.innerHTML = 'Animation Blur Effect';
-animateStyleSwitch.onclick = function() {
-	animateStyle = !animateStyle;
-};
-
-const buttonsContainer = document.createElement("div");
-buttonsContainer.className = "center";
-
-buttonsContainer.appendChild(analysisSwitch);
-buttonsContainer.appendChild(animateStyleSwitch);
-controller.appendChild(buttonsContainer);
-
 //analysis
 var totalEnergy = 0;
 var eatCount = 0;
@@ -260,12 +222,9 @@ function init() {
 
 function run() {
 	window.requestAnimationFrame(run);
-	//variable for analysis
-	if (analysisOn) {
-		totalEnergy = 0;
-		intOldestGen = intYoungestGen;
-		totalVelocityCoefficient = 0;
-	}
+	totalEnergy = 0;
+	intOldestGen = intYoungestGen;
+	totalVelocityCoefficient = 0;
 	//required for color()
 	totalPhotosynthesisCoefficient = 0;
 	totalAttackCoefficient = 0;
@@ -276,45 +235,36 @@ function run() {
 		gobbler[i].move();
 		gobbler[i].eat();
 		gobbler[i].reproduce();
-		if (analysisOn) {
-			totalEnergy += gobbler[i].energy;
-			intOldestGen = intOldestGen > gobbler[i].generation ?
-				gobbler[i].generation :
-				intOldestGen;
-			totalVelocityCoefficient += gobbler[i].v;
-		}
+		totalEnergy += gobbler[i].energy;
+		intOldestGen = intOldestGen > gobbler[i].generation ?
+			gobbler[i].generation :
+			intOldestGen;
+		totalVelocityCoefficient += gobbler[i].v;
 		totalAttackCoefficient += gobbler[i].attackCoefficient;
 		totalDefenceCoefficient += gobbler[i].defenceCoefficient;
 		totalPhotosynthesisCoefficient += gobbler[i].photosynthesisCoefficient;
 		gobbler[i].die();
 	}
-	if (analysisOn) {
-		analysisView.render({
-			lightLevel: environment.light().toFixed(2),
-			oxygenLevel: environment.oxygenLevel.toFixed(0),
-			averageEnergy: (totalEnergy / gobbler.length).toFixed(2),
-			averageVelocityCoefficient: (totalVelocityCoefficient / gobbler.length).toFixed(2),
-			carbonDioxideLevel: environment.carbonDioxideLevel.toFixed(0),
-			averageAttackCoefficient: (totalAttackCoefficient / gobbler.length).toFixed(2),
-			totalEnergy: totalEnergy.toFixed(0),
-			averageDefenceCoefficient: (totalDefenceCoefficient / gobbler.length).toFixed(2),
-			numberOfGobblers: gobbler.length,
-			averagePhotosynthesisCoefficient: (totalPhotosynthesisCoefficient / gobbler.length).toFixed(2),
-			eatCount,
-			reproductionCount,
-			deathCount,
-			intYoungestGen,
-			intOldestGen,
-		});
-	}
+	analysisView.render({
+		lightLevel: environment.light().toFixed(2),
+		oxygenLevel: environment.oxygenLevel.toFixed(0),
+		averageEnergy: (totalEnergy / gobbler.length).toFixed(2),
+		averageVelocityCoefficient: (totalVelocityCoefficient / gobbler.length).toFixed(2),
+		carbonDioxideLevel: environment.carbonDioxideLevel.toFixed(0),
+		averageAttackCoefficient: (totalAttackCoefficient / gobbler.length).toFixed(2),
+		totalEnergy: totalEnergy.toFixed(0),
+		averageDefenceCoefficient: (totalDefenceCoefficient / gobbler.length).toFixed(2),
+		numberOfGobblers: gobbler.length,
+		averagePhotosynthesisCoefficient: (totalPhotosynthesisCoefficient / gobbler.length).toFixed(2),
+		eatCount,
+		reproductionCount,
+		deathCount,
+		intYoungestGen,
+		intOldestGen,
+	});
 	canvasView.render(function (context) {
 		var lightLevel = ((environment.light())*255).toFixed(0);
-		if(animateStyle) {
-			context.fillStyle = 'rgba('+lightLevel+','+lightLevel+','+lightLevel+', .17)';
-			context.fillRect(0, 0, canvasView.canvas.width, canvasView.canvas.height);
-		} else {
-			context.clearRect(0,0,canvasView.canvas.width,canvasView.canvas.height);
-		}
+		context.clearRect(0,0,canvasView.canvas.width,canvasView.canvas.height);
 		//lightLevel
 		canvasView.canvas.style.background='rgb('+lightLevel+','+lightLevel+','+lightLevel+')';
 		for (i=0; i < gobbler.length; i++) {
@@ -327,5 +277,4 @@ function run() {
 	});
 }
 
-document.body.appendChild(viewHolder);
 run();
