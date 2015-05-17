@@ -39,7 +39,9 @@ gulp.task("jsDev", function () {
 });
 
 gulp.task("jsProd", function () {
-  const bundler = watchify(browserify(JS_PATH, watchify.args));
+  const bundler = browserify({
+    entries: JS_PATH
+  });
 
   bundler.bundle()
     .on('error', gutil.log.bind(gutil, 'Browserify Error'))
