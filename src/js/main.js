@@ -1,8 +1,5 @@
-const DescriptionView = require('./DescriptionView.js');
 const AnalysisView = require('./AnalysisView.js');
 const CanvasView = require('./CanvasView.js');
-
-DescriptionView();
 
 const analysisView = AnalysisView();
 const canvasView = CanvasView();
