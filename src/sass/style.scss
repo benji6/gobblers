@@ -30,6 +30,10 @@ header {
   background: darken($pale-gray, 10%);
 }
 
+section {
+  margin: 1em;
+}
+
 table {
   border-radius: 1em;
   box-shadow: 0 0 0.3em 0.3em $gray;
