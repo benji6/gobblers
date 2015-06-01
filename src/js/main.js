@@ -1,15 +1,11 @@
 const AnalysisView = require('./AnalysisView.js');
-const CanvasView = require('./CanvasView.js');
+const canvasView = require('./canvasView.js');
 
 const analysisView = AnalysisView();
-const canvasView = CanvasView();
-
-//model
-//declaration and initialization
 const intStartingGobblers = 256;
 const intStartingGobblerEnergy = 6;
-var gobblers = [];
-var environment = {
+const gobblers = [];
+const environment = {
 	light: function() {
 		return (Math.sin(Date.now() / 10000) + 1) / 2;
 	},
