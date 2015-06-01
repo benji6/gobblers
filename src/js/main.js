@@ -1,22 +1,10 @@
 const AnalysisView = require('./AnalysisView.js');
 const canvasView = require('./canvasView.js');
 const environment = require('./environment.js');
+const stats = require('./stats.js');
 
 const analysisView = AnalysisView();
 const gobblers = [];
-
-const stats = {
-	totalEnergy: 0,
-	eatCount: 0,
-	intYoungestGen: 0,
-	intOldestGen: 0,
-	reproductionCount: 0,
-	deathCount: 0,
-	totalVelocityCoefficient: 0,
-	totalAttackCoefficient: 0,
-	totalDefenceCoefficient: 0,
-	totalPhotosynthesisCoefficient: 0,
-};
 
 var i;
 function Gobbler({
