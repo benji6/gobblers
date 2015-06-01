@@ -2,6 +2,7 @@ const autoprefixer = require('gulp-autoprefixer');
 const babel = require('gulp-babel');
 const buffer = require('vinyl-buffer');
 const browserify = require('browserify');
+const connect = require('gulp-connect');
 const gulp = require('gulp');
 const gutil = require('gulp-util');
 const minifyCSS = require('gulp-minify-css');
@@ -14,25 +15,34 @@ const sourcemaps = require('gulp-sourcemaps');
 const uglify = require('gulp-uglify');
 const watchify = require('watchify');
 
-const HTML_PATH = "src/html/index.html";
-const JS_PATH = "src/js/main.js";
-const SASS_PATH = "src/sass/style.scss";
-const DIST_PATH = "dist";
+const htmlPath = "src/html/index.html";
+const jsPath = "src/js/main.js";
+const sassPath = "src/sass/style.scss";
+const distPath = "dist";
+
+gulp.task("connect", function () {
+  connect.server({livereload: true});
+});
+
+gulp.task("reload", function () {
+  gulp.src(distPath).pipe(connect.reload());
+});
 
 gulp.task("html", function () {
-  gulp.src(HTML_PATH)
+  gulp.src(htmlPath)
     .pipe(minifyHTML())
-    .pipe(gulp.dest(DIST_PATH));
+    .pipe(gulp.dest(distPath));
 });
 
 gulp.task("jsDev", function () {
-  const bundler = watchify(browserify(JS_PATH, R.assoc("debug", true, watchify.args)));
+  const bundler = watchify(browserify(jsPath, R.assoc("debug", true, watchify.args)));
 
   bundler.bundle()
     .on('error', gutil.log.bind(gutil, 'Browserify Error'))
     .pipe(source("bundle.js"))
     .pipe(plumber())
     .pipe(buffer())
+    .pipe(babel())
     .pipe(sourcemaps.init({loadMaps: true}))
     .pipe(sourcemaps.write())
     .pipe(gulp.dest('dist'));
@@ -40,7 +50,7 @@ gulp.task("jsDev", function () {
 
 gulp.task("jsProd", function () {
   const bundler = browserify({
-    entries: JS_PATH
+    entries: jsPath
   });
 
   bundler.bundle()
@@ -53,7 +63,7 @@ gulp.task("jsProd", function () {
 });
 
 gulp.task("sass", function () {
-  gulp.src(SASS_PATH)
+  gulp.src(sassPath)
     .pipe(plumber())
     .pipe(sass())
     .pipe(autoprefixer({
@@ -61,14 +71,15 @@ gulp.task("sass", function () {
       cascade: false
     }))
     .pipe(minifyCSS())
-    .pipe(gulp.dest(DIST_PATH));
+    .pipe(gulp.dest(distPath));
 });
 
 gulp.task("watch", function () {
-  gulp.start("jsDev", "html", "sass");
+  gulp.start("jsDev", "html", "sass", "connect");
   gulp.watch("src/js/**/*.js", ["jsDev"]);
-  gulp.watch(HTML_PATH, ["html"]);
-  gulp.watch(SASS_PATH, ["sass"]);
+  gulp.watch(htmlPath, ["html"]);
+  gulp.watch(sassPath, ["sass"]);
+  gulp.watch(distPath + "/*", ["reload"]);
 });
 
 gulp.task("build", ["jsProd", "html", "sass"]);
