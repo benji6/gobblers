@@ -1,18 +1,9 @@
 const AnalysisView = require('./AnalysisView.js');
 const canvasView = require('./canvasView.js');
+const environment = require('./environment.js');
 
 const analysisView = AnalysisView();
-const intStartingGobblers = 256;
-const intStartingGobblerEnergy = 6;
 const gobblers = [];
-const environment = {
-	light: function() {
-		return (Math.sin(Date.now() / 10000) + 1) / 2;
-	},
-	oxygenLevel: intStartingGobblers * intStartingGobblerEnergy,
-	carbonDioxideLevel: intStartingGobblers * intStartingGobblerEnergy,
-	maxEvolutionPoints: 8
-};
 
 //analysis
 var totalEnergy = 0;
@@ -60,14 +51,14 @@ function init() {
 		return 'rgb('+r+','+g+','+b+')';
 	};
 	Gobbler.prototype.photosynthesize = function() {
-		var energyProduced = this.photosynthesisCoefficient * this.radius() * environment.light() * environment.carbonDioxideLevel / intStartingGobblers / 1000;
+		var energyProduced = this.photosynthesisCoefficient * this.radius() * environment.light() * environment.carbonDioxideLevel / environment.initialGobblersCount / 1000;
 		this.energy += energyProduced;
 		environment.oxygenLevel += energyProduced;
 		environment.carbonDioxideLevel -= energyProduced;
 	};
 	Gobbler.prototype.move = function() {
 		//set properties
-		var dblVel = this.v * this.energy * environment.oxygenLevel / intStartingGobblers;
+		var dblVel = this.v * this.energy * environment.oxygenLevel / environment.initialGobblersCount;
 		//x movement rules
 		if (this.x<=this.radius()+dblVel) {
 			this.x+=Math.random()/2*dblVel;
@@ -190,11 +181,11 @@ function init() {
 		}
 	};
 	//initial spawn
-	for (i=0;i<intStartingGobblers;i++) {
+	for (i=0; i < environment.initialGobblersCount; i++) {
 		var gobblerParams = {
 			x: 0,
 			y: 0,
-			energy: intStartingGobblerEnergy,
+			energy: environment.initialGobblerEnergy,
 			v: 1,
 			attackCoefficient: 0.5,
 			defenceCoefficient: 0.5,
