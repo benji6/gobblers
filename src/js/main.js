@@ -41,13 +41,6 @@ function init() {
 	var calculateDefenceStrength = ({defenceCoefficient, energy}) => defenceCoefficient * energy;
 
 	Gobbler.prototype = {
-		color: function () {
-			const totalGobblers = gobblers.length;
-			return `rgb(${(this.attackCoefficient / totalAttackCoefficient * totalGobblers * 127).toFixed(0)},
-				${(this.defenceCoefficient / totalDefenceCoefficient * totalGobblers * 127).toFixed(0)},
-				${(this.photosynthesisCoefficient / totalPhotosynthesisCoefficient * totalGobblers * 127).toFixed(0)})`;
-		},
-
 		photosynthesize: function () {
 			var energyProduced = this.photosynthesisCoefficient * calculateRadius(this) * environment.light() *
 				environment.carbonDioxideLevel / environment.initialGobblersCount / 1000;
@@ -250,7 +243,7 @@ function run() {
 
 	canvasView.render({
 		gobblers,
-		lightLevel: (environment.light() * 255).toFixed(0),
+		lightLevel: (environment.light() * 255).toFixed(0), totalAttackCoefficient, totalDefenceCoefficient, totalPhotosynthesisCoefficient
 	});
 }
 
