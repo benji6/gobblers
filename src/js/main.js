@@ -64,23 +64,13 @@ const move = (gobbler, environment) => {
 	return gobbler;
 };
 
-const eat = (gobbler, gobblers, stats) => {
-	for (var j = i + 1; j < gobblers.length; j++) {
-		let thisGobblerRadius = calculateRadius(gobbler);
-		let thatGobblerRadius = calculateRadius(gobblers[j]);
-		if (gobbler.x>=gobblers[j].x - thatGobblerRadius - thisGobblerRadius &&
-			gobbler.x<=gobblers[j].x+ thatGobblerRadius + thisGobblerRadius &&
-			gobbler.y>=gobblers[j].y- thatGobblerRadius - thisGobblerRadius &&
-			gobbler.y<=gobblers[j].y+ thatGobblerRadius + thisGobblerRadius) {
-			if (calculateAttackStrength(gobbler) >= calculateDefenceStrength(gobblers[j])) {
-				stats.eatCount++;
-				gobbler.energy += gobblers[j].energy;
-				gobblers[j].energy = 0;
-				break;
-			}
-		}
+const attack = (gobbler0, gobbler1, stats) => {
+	if (calculateAttackStrength(gobbler0) >= calculateDefenceStrength(gobbler1)) {
+		stats.eatCount++;
+		gobbler0.energy += gobbler1.energy;
+		gobbler1.energy = 0;
 	}
-	return gobbler;
+	return gobbler0;
 };
 
 const respire = (gobbler, environment) => {
@@ -119,6 +109,7 @@ const reproduce = (gobbler, stats) => {
 			stats.intYoungestGen = gobblers[i].generation;
 		}
 	}
+	return gobbler;
 };
 
 const mutate = (gobbler) => {
@@ -142,6 +133,35 @@ const mutate = (gobbler) => {
 		gobbler.defenceCoefficient = gobbler.defenceCoefficient * mutationEnforcementRatio;
 		gobbler.photosynthesisCoefficient = gobbler.photosynthesisCoefficient * mutationEnforcementRatio;
 	}
+};
+
+const removeDead = R.filter((gobbler) => {
+	if (gobbler.energy < 0.1) {
+		stats.deathCount++;
+		environment.increaseAtmosphereOxygenComposition(-gobbler.energy);
+		return false;
+	}
+	return true;
+});
+
+const checkPossibleContactX = (gobbler0, gobbler1) => {
+	const x0 = gobbler0.x;
+	const radius0 = calculateRadius(gobbler0);
+	const x1 = gobbler1.x;
+	const radius1 = calculateRadius(gobbler1);
+
+	return x0 + radius0 >= x1 - radius1 && x0 - radius0 <= x1 + radius1;
+};
+
+const checkContact = (gobbler0, gobbler1) => {
+	const x0 = gobbler0.x;
+	const y0 = gobbler0.y;
+	const radius0 = calculateRadius(gobbler0);
+	const x1 = gobbler1.x;
+	const y1 = gobbler1.y;
+	const radius1 = calculateRadius(gobbler1);
+
+	return Math.pow(Math.pow(x0 - x1, 2) + Math.pow(y0 - y1, 2), 0.5) <= radius0 + radius1;
 };
 
 //initial spawn
@@ -172,26 +192,38 @@ for (i = 0; i < environment.initialGobblersCount; i++) {
 	stats.totalAttackCoefficient = 0;
 	stats.totalDefenceCoefficient = 0;
 
-	const removeDead = R.filter((gobbler) => {
-		if (gobbler.energy < 0.1) {
-			stats.deathCount++;
-			environment.increaseAtmosphereOxygenComposition(-gobbler.energy);
-			return false;
-		}
-		return true;
-	});
+	gobblers = R.sort((gobbler0, gobbler1) => gobbler0.x - gobbler1.x, gobblers);
 
-	for (i=0; i < gobblers.length; i++) {
-		reproduce(eat(move(photosynthesize(gobblers[i], environment), environment), gobblers, stats), stats);
-		respire(gobblers[i], environment);
-		stats.totalEnergy += gobblers[i].energy;
-		stats.intOldestGen = stats.intOldestGen > gobblers[i].generation ?
-			gobblers[i].generation :
+	for (i = 0; i < gobblers.length; i++) {
+		let gobbler0 = gobblers[i];
+		let j = i - 1;
+
+		while (j >= 0 && checkPossibleContactX(gobbler0, gobblers[j])) {
+			let gobbler1 = gobblers[j];
+			if (checkContact(gobbler0, gobbler1)) {
+				attack(gobbler0, gobbler1, stats);
+			}
+			j--;
+		}
+		j = i + 1;
+		while (j < gobblers.length && checkPossibleContactX(gobbler0, gobblers[j])) {
+			let gobbler1 = gobblers[j];
+			if (checkContact(gobbler0, gobbler1)) {
+				attack(gobbler0, gobbler1, stats);
+			}
+			j++;
+		}
+
+		respire(reproduce(move(photosynthesize(gobbler0, environment), environment), stats), environment);
+
+		stats.totalEnergy += gobbler0.energy;
+		stats.intOldestGen = stats.intOldestGen > gobbler0.generation ?
+			gobbler0.generation :
 			stats.intOldestGen;
-		stats.totalVelocityCoefficient += gobblers[i].v;
-		stats.totalAttackCoefficient += gobblers[i].attackCoefficient;
-		stats.totalDefenceCoefficient += gobblers[i].defenceCoefficient;
-		stats.totalPhotosynthesisCoefficient += gobblers[i].photosynthesisCoefficient;
+		stats.totalVelocityCoefficient += gobbler0.v;
+		stats.totalAttackCoefficient += gobbler0.attackCoefficient;
+		stats.totalDefenceCoefficient += gobbler0.defenceCoefficient;
+		stats.totalPhotosynthesisCoefficient += gobbler0.photosynthesisCoefficient;
 	}
 
 	gobblers = removeDead(gobblers);
