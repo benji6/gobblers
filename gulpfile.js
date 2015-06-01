@@ -42,9 +42,9 @@ gulp.task("jsDev", function () {
     .pipe(source("bundle.js"))
     .pipe(plumber())
     .pipe(buffer())
-    .pipe(babel())
     .pipe(sourcemaps.init({loadMaps: true}))
-    .pipe(sourcemaps.write())
+    .pipe(babel())
+    .pipe(sourcemaps.write('./'))
     .pipe(gulp.dest('dist'));
 });
 
