@@ -36,19 +36,11 @@ function init() {
 		this.y = y;
 	}
 
+	var calculateRadius = ({energy}) => Math.sqrt(energy);
+	var calculateAttackStrength = ({attackCoefficient, energy}) => attackCoefficient * energy;
+	var calculateDefenceStrength = ({defenceCoefficient, energy}) => defenceCoefficient * energy;
+
 	Gobbler.prototype = {
-		radius: function () {
-			return Math.sqrt(this.energy);
-		},
-
-		attack: function () {
-			return this.attackCoefficient * this.energy;
-		},
-
-		defence: function () {
-			return this.defenceCoefficient * this.energy;
-		},
-
 		color: function () {
 			const totalGobblers = gobblers.length;
 			return `rgb(${(this.attackCoefficient / totalAttackCoefficient * totalGobblers * 127).toFixed(0)},
@@ -57,7 +49,7 @@ function init() {
 		},
 
 		photosynthesize: function () {
-			var energyProduced = this.photosynthesisCoefficient * this.radius() * environment.light() *
+			var energyProduced = this.photosynthesisCoefficient * calculateRadius(this) * environment.light() *
 				environment.carbonDioxideLevel / environment.initialGobblersCount / 1000;
 			this.energy += energyProduced;
 			environment.oxygenLevel += energyProduced;
@@ -66,21 +58,22 @@ function init() {
 
 		move: function () {
 			const speed = this.v * this.energy * environment.oxygenLevel / environment.initialGobblersCount;
-			//x movement rules
-			if (this.x <= this.radius() + speed) {
+			const radius = calculateRadius(this);
+
+			if (this.x <= radius + speed) {
 				this.x += Math.random() / 2 * speed;
 			} else {
-				if (this.x >= canvasView.canvas.width - this.radius() - speed / 2) {
+				if (this.x >= canvasView.canvas.width - radius - speed / 2) {
 					this.x -= Math.random() / 2 * speed;
 				} else {
 					this.x += (Math.random() - 0.5) * speed;
 				}
 			}
 			//y movement rules
-			if (this.y<=this.radius()+speed) {
+			if (this.y<= radius +speed) {
 				this.y+=Math.random()/2*speed;
 			} else {
-				if (this.y>=canvasView.canvas.height-this.radius()-speed/2) {
+				if (this.y>=canvasView.canvas.height- radius -speed/2) {
 					this.y-=Math.random()/2*speed;
 				}
 				else {
@@ -95,10 +88,15 @@ function init() {
 
 		eat: function () {
 			for (var j = i + 1; j < gobblers.length; j++) {
+				let thisGobblerRadius = calculateRadius(this);
+				let thatGobblerRadius = calculateRadius(gobblers[j]);
 				//check contact
-				if(this.x>=gobblers[j].x-gobblers[j].radius()-this.radius() && this.x<=gobblers[j].x+gobblers[j].radius()+this.radius() && this.y>=gobblers[j].y-gobblers[j].radius()-this.radius() && this.y<=gobblers[j].y+gobblers[j].radius()+this.radius()) {
+				if(this.x>=gobblers[j].x - thatGobblerRadius - thisGobblerRadius &&
+					this.x<=gobblers[j].x+ thatGobblerRadius + thisGobblerRadius &&
+					this.y>=gobblers[j].y- thatGobblerRadius - thisGobblerRadius &&
+					this.y<=gobblers[j].y+ thatGobblerRadius + thisGobblerRadius) {
 					//check attack and defense stats
-					if (this.attack()>=gobblers[j].defence()) {
+					if (calculateAttackStrength(this) >= calculateDefenceStrength(gobblers[j])) {
 						//analysis
 						eatCount++;
 						deathCount++;
@@ -120,7 +118,7 @@ function init() {
 				//reproduce
 				this.generation++;
 				//separate children
-				var displacementRadius = this.radius() * 2;
+				var displacementRadius = calculateRadius(this) * 2;
 				var xDisplacement = (Math.random() - 0.5) * 2 * displacementRadius;
 				var yDisplacement = Math.sqrt(Math.pow(displacementRadius,2) - Math.pow(xDisplacement,2));
 				//new Gobbler
@@ -191,8 +189,8 @@ function init() {
 	};
 
 	//initial spawn
-	for (i=0; i < environment.initialGobblersCount; i++) {
-		var gobblerParams = {
+	for (i = 0; i < environment.initialGobblersCount; i++) {
+		let gobblerParams = {
 			x: 0,
 			y: 0,
 			energy: environment.initialGobblerEnergy,
@@ -203,8 +201,9 @@ function init() {
 			photosynthesisCoefficient: 1
 		};
 		gobblers[i] = new Gobbler(gobblerParams);
-		gobblers[i].x = Math.random()*(canvasView.canvas.width-2*gobblers[i].radius())+gobblers[i].radius();
-		gobblers[i].y = Math.random()*(canvasView.canvas.height-2*gobblers[i].radius())+gobblers[i].radius();
+		let radius = calculateRadius(gobblers[i]);
+		gobblers[i].x = Math.random()*(canvasView.canvas.width-2* radius) + radius;
+		gobblers[i].y = Math.random()*(canvasView.canvas.height-2* radius) + radius;
 		gobblers[i].mutate();
 	}
 }
