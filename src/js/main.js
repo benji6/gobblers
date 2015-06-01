@@ -21,20 +21,22 @@ init();
 var i;
 function init() {
 	//Gobbler constructor
-	function Gobbler(params) {
-		this.energy = params.energy;
-		this.x = params.x;
-		this.y = params.y;
-		this.v = params.v;
-		this.attackCoefficient = params.attackCoefficient;
-		this.defenceCoefficient = params.defenceCoefficient;
-		this.photosynthesisCoefficient = params.photosynthesisCoefficient;
-		this.generation = params.generation;
+	function Gobbler({
+		energy, x, y, v, attackCoefficient, defenceCoefficient, photosynthesisCoefficient, generation
+	}) {
+		this.attackCoefficient = attackCoefficient;
+		this.defenceCoefficient = defenceCoefficient;
+		this.energy = energy;
+		this.generation = generation;
+		this.metabolism = 0.001;
+		this.mutationCoefficient = 0.5;
+		this.photosynthesisCoefficient = photosynthesisCoefficient;
+		this.threshold = 12;
+		this.v = v;
+		this.x = x;
+		this.y = y;
 	}
 	//Gobbler prototype
-	Gobbler.prototype.metabolism = 0.001;
-	Gobbler.prototype.threshold = 12;
-	Gobbler.prototype.mutationCoefficient = 0.5;
 	Gobbler.prototype.radius = function() {
 		return Math.sqrt(this.energy);
 	};
