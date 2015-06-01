@@ -68,7 +68,7 @@ module.exports = function () {
   });
 
   const ViewFactory = React.createFactory(View);
-  const container = document.body.appendChild(document.createElement("div"));
+  const container = document.querySelector("#stats_container");
 
   return {
     container,

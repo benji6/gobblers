@@ -1,9 +1,10 @@
 @import "vars";
 
 body {
-  font-family: sans-serif;
   background-color: $pale-gray;
   color: $black;
+  font-family: sans-serif;
+  margin: 0;
 }
 
 button {
@@ -21,6 +22,12 @@ div.center {
 
 h1 {
   text-align: center;
+  margin: 0;
+  padding: 1em;
+}
+
+header {
+  background: darken($pale-gray, 10%);
 }
 
 table {
