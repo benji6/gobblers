@@ -20,7 +20,6 @@ var totalPhotosynthesisCoefficient = 0;
 init();
 var i;
 function init() {
-	//Gobbler constructor
 	function Gobbler({
 		energy, x, y, v, attackCoefficient, defenceCoefficient, photosynthesisCoefficient, generation
 	}) {
@@ -36,152 +35,161 @@ function init() {
 		this.x = x;
 		this.y = y;
 	}
-	//Gobbler prototype
-	Gobbler.prototype.radius = function() {
-		return Math.sqrt(this.energy);
-	};
-	Gobbler.prototype.attack = function() {
-		return this.attackCoefficient * this.energy;
-	};
-	Gobbler.prototype.defence = function() {
-		return this.defenceCoefficient * this.energy;
-	};
-	Gobbler.prototype.color = function() {
-		var r = (this.attackCoefficient / totalAttackCoefficient * gobblers.length * 127).toFixed(0);
-		var b = (this.defenceCoefficient / totalDefenceCoefficient * gobblers.length * 127).toFixed(0);
-		var g = (this.photosynthesisCoefficient / totalPhotosynthesisCoefficient * gobblers.length * 127).toFixed(0);
-		return 'rgb('+r+','+g+','+b+')';
-	};
-	Gobbler.prototype.photosynthesize = function() {
-		var energyProduced = this.photosynthesisCoefficient * this.radius() * environment.light() * environment.carbonDioxideLevel / environment.initialGobblersCount / 1000;
-		this.energy += energyProduced;
-		environment.oxygenLevel += energyProduced;
-		environment.carbonDioxideLevel -= energyProduced;
-	};
-	Gobbler.prototype.move = function() {
-		//set properties
-		var dblVel = this.v * this.energy * environment.oxygenLevel / environment.initialGobblersCount;
-		//x movement rules
-		if (this.x<=this.radius()+dblVel) {
-			this.x+=Math.random()/2*dblVel;
-		} else {
-			if (this.x>=canvasView.canvas.width-this.radius()-dblVel/2) {
-				this.x-=Math.random()/2*dblVel;
+
+	Gobbler.prototype = {
+		radius: function () {
+			return Math.sqrt(this.energy);
+		},
+
+		attack: function () {
+			return this.attackCoefficient * this.energy;
+		},
+
+		defence: function () {
+			return this.defenceCoefficient * this.energy;
+		},
+
+		color: function () {
+			const totalGobblers = gobblers.length;
+			return `rgb(${(this.attackCoefficient / totalAttackCoefficient * totalGobblers * 127).toFixed(0)},
+				${(this.defenceCoefficient / totalDefenceCoefficient * totalGobblers * 127).toFixed(0)},
+				${(this.photosynthesisCoefficient / totalPhotosynthesisCoefficient * totalGobblers * 127).toFixed(0)})`;
+		},
+
+		photosynthesize: function () {
+			var energyProduced = this.photosynthesisCoefficient * this.radius() * environment.light() *
+				environment.carbonDioxideLevel / environment.initialGobblersCount / 1000;
+			this.energy += energyProduced;
+			environment.oxygenLevel += energyProduced;
+			environment.carbonDioxideLevel -= energyProduced;
+		},
+
+		move: function () {
+			const speed = this.v * this.energy * environment.oxygenLevel / environment.initialGobblersCount;
+			//x movement rules
+			if (this.x <= this.radius() + speed) {
+				this.x += Math.random() / 2 * speed;
 			} else {
-				this.x+=(Math.random() - 0.5) * dblVel;
-			}
-		}
-		//y movement rules
-		if (this.y<=this.radius()+dblVel) {
-			this.y+=Math.random()/2*dblVel;
-		} else {
-			if (this.y>=canvasView.canvas.height-this.radius()-dblVel/2) {
-				this.y-=Math.random()/2*dblVel;
-			}
-			else {
-				this.y+=(Math.random() - 0.5) * dblVel;
-			}
-		}
-		//reduce energy
-		var energyUsed = this.energy * dblVel / canvasView.canvas.width / 8;
-		this.energy -= energyUsed;
-		environment.oxygenLevel -= energyUsed;
-		environment.carbonDioxideLevel += energyUsed;
-	};
-	Gobbler.prototype.eat = function() {
-		for (var j = i + 1; j < gobblers.length; j++) {
-			//check contact
-			if(this.x>=gobblers[j].x-gobblers[j].radius()-this.radius() && this.x<=gobblers[j].x+gobblers[j].radius()+this.radius() && this.y>=gobblers[j].y-gobblers[j].radius()-this.radius() && this.y<=gobblers[j].y+gobblers[j].radius()+this.radius()) {
-				//check attack and defense stats
-				if (this.attack()>=gobblers[j].defence()) {
-					//analysis
-					eatCount++;
-					deathCount++;
-					//eat
-					this.energy += gobblers[j].energy;
-					gobblers.splice(j, 1);
-					gobblers.length = gobblers.length;
-					this.eat();
-					break;
+				if (this.x >= canvasView.canvas.width - this.radius() - speed / 2) {
+					this.x -= Math.random() / 2 * speed;
+				} else {
+					this.x += (Math.random() - 0.5) * speed;
 				}
 			}
-		}
-	};
-	Gobbler.prototype.reproduce = function() {
-		if (this.energy > this.threshold) {
-			//analysis
-			reproductionCount++;
-			//reproduce
-			this.generation++;
-			//separate children
-			var displacementRadius = this.radius() * 2;
-			var xDisplacement = (Math.random() - 0.5) * 2 * displacementRadius;
-			var yDisplacement = Math.sqrt(Math.pow(displacementRadius,2) - Math.pow(xDisplacement,2));
-			//new Gobbler
-			var parentGobbler = this;
-			var gobblerParams = {
-				x: parentGobbler.x - xDisplacement,
-				y: parentGobbler.y - yDisplacement,
-				energy: parentGobbler.energy / 2,
-				v: parentGobbler.v,
-				attackCoefficient: parentGobbler.attackCoefficient,
-				defenceCoefficient: parentGobbler.defenceCoefficient,
-				generation: parentGobbler.generation,
-				photosynthesisCoefficient: parentGobbler.photosynthesisCoefficient
-			};
-			gobblers[gobblers.length] = new Gobbler(gobblerParams);
-			this.x += xDisplacement;
-			this.y += yDisplacement;
-			//split energy
-			this.energy = this.energy/2;
-			//mutate
-			this.mutate();
-			gobblers[gobblers.length - 1].mutate();
-			//analysis
-			if (intYoungestGen < this.generation) {
-				intYoungestGen = gobblers[i].generation;
+			//y movement rules
+			if (this.y<=this.radius()+speed) {
+				this.y+=Math.random()/2*speed;
+			} else {
+				if (this.y>=canvasView.canvas.height-this.radius()-speed/2) {
+					this.y-=Math.random()/2*speed;
+				}
+				else {
+					this.y+=(Math.random() - 0.5) * speed;
+				}
 			}
-		}
-	};
-	Gobbler.prototype.mutate = function() {
-		//mutate properties
-		var obj = this;
-		function subMutate(prop) {
-			prop += prop * (Math.random() - 0.5) * obj.mutationCoefficient;
-			if (prop < 0) {
-				prop = 0.000001;
+			const energyUsed = this.energy * speed / canvasView.canvas.width / 8;
+			this.energy -= energyUsed;
+			environment.oxygenLevel -= energyUsed;
+			environment.carbonDioxideLevel += energyUsed;
+		},
+
+		eat: function () {
+			for (var j = i + 1; j < gobblers.length; j++) {
+				//check contact
+				if(this.x>=gobblers[j].x-gobblers[j].radius()-this.radius() && this.x<=gobblers[j].x+gobblers[j].radius()+this.radius() && this.y>=gobblers[j].y-gobblers[j].radius()-this.radius() && this.y<=gobblers[j].y+gobblers[j].radius()+this.radius()) {
+					//check attack and defense stats
+					if (this.attack()>=gobblers[j].defence()) {
+						//analysis
+						eatCount++;
+						deathCount++;
+						//eat
+						this.energy += gobblers[j].energy;
+						gobblers.splice(j, 1);
+						gobblers.length = gobblers.length;
+						this.eat();
+						break;
+					}
+				}
 			}
-			return prop;
-		}
-		this.v = subMutate(this.v);
-		this.attackCoefficient = subMutate(this.attackCoefficient);
-		this.defenceCoefficient = subMutate(this.defenceCoefficient);
-		this.photosynthesisCoefficient = subMutate(this.photosynthesisCoefficient);
-		//enforce restrictions
-		var currentEvolutionPoints = this.v + this.attackCoefficient + this.defenceCoefficient + this.photosynthesisCoefficient;
-		var mutationEnforcementRatio = environment.maxEvolutionPoints / currentEvolutionPoints;
-		if (currentEvolutionPoints > environment.maxEvolutionPoints) {
-			this.v = this.v * mutationEnforcementRatio;
-			this.attackCoefficient = this.attackCoefficient * mutationEnforcementRatio;
-			this.defenceCoefficient = this.defenceCoefficient * mutationEnforcementRatio;
-			this.photosynthesisCoefficient = this.photosynthesisCoefficient * mutationEnforcementRatio;
-		}
+		},
+
+		reproduce: function() {
+			if (this.energy > this.threshold) {
+				//analysis
+				reproductionCount++;
+				//reproduce
+				this.generation++;
+				//separate children
+				var displacementRadius = this.radius() * 2;
+				var xDisplacement = (Math.random() - 0.5) * 2 * displacementRadius;
+				var yDisplacement = Math.sqrt(Math.pow(displacementRadius,2) - Math.pow(xDisplacement,2));
+				//new Gobbler
+				var parentGobbler = this;
+				var gobblerParams = {
+					x: parentGobbler.x - xDisplacement,
+					y: parentGobbler.y - yDisplacement,
+					energy: parentGobbler.energy / 2,
+					v: parentGobbler.v,
+					attackCoefficient: parentGobbler.attackCoefficient,
+					defenceCoefficient: parentGobbler.defenceCoefficient,
+					generation: parentGobbler.generation,
+					photosynthesisCoefficient: parentGobbler.photosynthesisCoefficient
+				};
+				gobblers[gobblers.length] = new Gobbler(gobblerParams);
+				this.x += xDisplacement;
+				this.y += yDisplacement;
+				//split energy
+				this.energy = this.energy/2;
+				//mutate
+				this.mutate();
+				gobblers[gobblers.length - 1].mutate();
+				//analysis
+				if (intYoungestGen < this.generation) {
+					intYoungestGen = gobblers[i].generation;
+				}
+			}
+		},
+
+		mutate: function() {
+			//mutate properties
+			var obj = this;
+			function subMutate(prop) {
+				prop += prop * (Math.random() - 0.5) * obj.mutationCoefficient;
+				if (prop < 0) {
+					prop = 0.000001;
+				}
+				return prop;
+			}
+			this.v = subMutate(this.v);
+			this.attackCoefficient = subMutate(this.attackCoefficient);
+			this.defenceCoefficient = subMutate(this.defenceCoefficient);
+			this.photosynthesisCoefficient = subMutate(this.photosynthesisCoefficient);
+			//enforce restrictions
+			var currentEvolutionPoints = this.v + this.attackCoefficient + this.defenceCoefficient + this.photosynthesisCoefficient;
+			var mutationEnforcementRatio = environment.maxEvolutionPoints / currentEvolutionPoints;
+			if (currentEvolutionPoints > environment.maxEvolutionPoints) {
+				this.v = this.v * mutationEnforcementRatio;
+				this.attackCoefficient = this.attackCoefficient * mutationEnforcementRatio;
+				this.defenceCoefficient = this.defenceCoefficient * mutationEnforcementRatio;
+				this.photosynthesisCoefficient = this.photosynthesisCoefficient * mutationEnforcementRatio;
+			}
+		},
+
+		die: function () {
+			const energyUsed = this.energy * this.metabolism;
+
+			this.energy -= energyUsed;
+			environment.oxygenLevel -= energyUsed;
+			environment.carbonDioxideLevel += energyUsed;
+
+			if (this.energy < 0.1) {
+				deathCount++;
+				environment.oxygenLevel += this.energy;
+				gobblers.splice(i,1);
+			}
+		},
 	};
-	Gobbler.prototype.die = function() {
-		//reduce energy
-		var energyUsed = this.energy * this.metabolism;
-		this.energy -= energyUsed;
-		environment.oxygenLevel -= energyUsed;
-		environment.carbonDioxideLevel += energyUsed;
-		//check for death
-		if (this.energy < 0.1) {
-			//analysis
-			deathCount++;
-			//release oxygen
-			environment.oxygenLevel += this.energy;
-			gobblers.splice(i,1);
-		}
-	};
+
 	//initial spawn
 	for (i=0; i < environment.initialGobblersCount; i++) {
 		var gobblerParams = {
