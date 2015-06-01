@@ -52,8 +52,7 @@ function init() {
 			var energyProduced = this.photosynthesisCoefficient * calculateRadius(this) * environment.light() *
 				environment.carbonDioxideLevel / environment.initialGobblersCount / 1000;
 			this.energy += energyProduced;
-			environment.oxygenLevel += energyProduced;
-			environment.carbonDioxideLevel -= energyProduced;
+			environment.increaseAtmosphereOxygenComposition(energyProduced);
 		},
 
 		move: function () {
@@ -82,8 +81,7 @@ function init() {
 			}
 			const energyUsed = this.energy * speed / canvasView.canvas.width / 8;
 			this.energy -= energyUsed;
-			environment.oxygenLevel -= energyUsed;
-			environment.carbonDioxideLevel += energyUsed;
+			environment.increaseAtmosphereOxygenComposition(-energyUsed);
 		},
 
 		eat: function () {
@@ -177,12 +175,11 @@ function init() {
 			const energyUsed = this.energy * this.metabolism;
 
 			this.energy -= energyUsed;
-			environment.oxygenLevel -= energyUsed;
-			environment.carbonDioxideLevel += energyUsed;
+			environment.increaseAtmosphereOxygenComposition(-energyUsed);
 
 			if (this.energy < 0.1) {
 				deathCount++;
-				environment.oxygenLevel += this.energy;
+				environment.increaseAtmosphereOxygenComposition(-this.energy);
 				gobblers.splice(i,1);
 			}
 		},
