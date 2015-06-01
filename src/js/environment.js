@@ -1,4 +1,7 @@
-const initialGobblersCount = 256;
+const canvasView = require('./canvasView.js');
+
+const initialGobblersCount = (canvasView.canvas.height > canvasView.canvas.width ?
+	canvasView.canvas.width : canvasView.canvas.height) * 2 / 3;
 const initialGobblerEnergy = 6;
 
 const oxygenLevel = initialGobblersCount * initialGobblerEnergy;

@@ -1,7 +1,9 @@
 const R = require('ramda');
 
 const canvas = document.querySelector("canvas");
-canvas.width = 512;
+canvas.width = window.innerHeight > window.innerWidth ?
+  window.innerWidth :
+  window.innerHeight;
 canvas.height = canvas.width;
 const context = canvas.getContext('2d');
 
