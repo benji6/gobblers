@@ -195,16 +195,9 @@ for (i = 0; i < environment.initialGobblersCount; i++) {
 	}
 
 	gobblers = removeDead(gobblers);
-
+	stats.totalGobblers = gobblers.length;
 	analysisView.render({
-		averageAttackCoefficient: (stats.totalAttackCoefficient / gobblers.length).toFixed(2),
-		averageDefenceCoefficient: (stats.totalDefenceCoefficient / gobblers.length).toFixed(2),
-		averageEnergy: (stats.totalEnergy / gobblers.length).toFixed(2),
-		averagePhotosynthesisCoefficient: (stats.totalPhotosynthesisCoefficient / gobblers.length).toFixed(2),
-		averageVelocityCoefficient: (stats.totalVelocityCoefficient / gobblers.length).toFixed(2),
 		environment,
-		lightLevel: environment.light().toFixed(2),
-		numberOfGobblers: gobblers.length,
 		stats,
 	});
 

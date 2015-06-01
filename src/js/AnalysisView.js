@@ -11,12 +11,19 @@ module.exports = function () {
         intOldestGen,
         reproductionCount,
         totalEnergy,
+        totalAttackCoefficient,
+        totalDefenceCoefficient,
+        totalGobblers,
+        totalPhotosynthesisCoefficient,
+        totalVelocityCoefficient,
       } = this.props.stats;
 
+      const environment = this.props.environment;
+      const lightLevel = this.props.environment.light().toFixed(2);
       const {
         carbonDioxideLevel,
         oxygenLevel,
-      } = this.props.environment;
+      } = environment;
 
       return React.DOM.table(null, [
         React.DOM.thead({key: i++}, [
@@ -28,33 +35,33 @@ module.exports = function () {
         React.DOM.tbody({key: i++}, [
           React.DOM.tr({key: i++}, [
             React.DOM.td({key: i++}, "Light Level"),
-            React.DOM.td({key: i++}, this.props.lightLevel),
+            React.DOM.td({key: i++}, lightLevel),
             React.DOM.td({key: i++}, "Average Energy"),
-            React.DOM.td({key: i++}, this.props.averageEnergy),
+            React.DOM.td({key: i++}, (totalEnergy / totalGobblers).toFixed(2)),
           ]),
           React.DOM.tr({key: i++}, [
             React.DOM.td({key: i++}, "Oxygen Level"),
             React.DOM.td({key: i++}, oxygenLevel.toFixed(0)),
             React.DOM.td({key: i++}, "Average Velocity Coefficient"),
-            React.DOM.td({key: i++}, this.props.averageVelocityCoefficient),
+            React.DOM.td({key: i++}, (totalVelocityCoefficient / totalGobblers).toFixed(2)),
           ]),
           React.DOM.tr({key: i++}, [
             React.DOM.td({key: i++}, "Carbon Dioxide Level"),
             React.DOM.td({key: i++}, carbonDioxideLevel.toFixed(0)),
             React.DOM.td({key: i++}, "Average Attack Coefficient"),
-            React.DOM.td({key: i++}, this.props.averageAttackCoefficient),
+            React.DOM.td({key: i++}, (totalAttackCoefficient / totalGobblers).toFixed(2)),
           ]),
           React.DOM.tr({key: i++}, [
             React.DOM.td({key: i++}, "Total Energy"),
             React.DOM.td({key: i++}, totalEnergy.toFixed(0)),
             React.DOM.td({key: i++}, "Average Defence Coefficient"),
-            React.DOM.td({key: i++}, this.props.averageDefenceCoefficient),
+            React.DOM.td({key: i++}, (totalDefenceCoefficient / totalGobblers).toFixed(2)),
           ]),
           React.DOM.tr({key: i++}, [
             React.DOM.td({key: i++}, "Number of Gobblers"),
-            React.DOM.td({key: i++}, this.props.numberOfGobblers),
+            React.DOM.td({key: i++}, totalGobblers),
             React.DOM.td({key: i++}, "Average Photosynthesis Coefficient"),
-            React.DOM.td({key: i++}, this.props.averagePhotosynthesisCoefficient),
+            React.DOM.td({key: i++}, (totalPhotosynthesisCoefficient / totalGobblers).toFixed(2)),
           ]),
           React.DOM.tr({key: i++}, [
             React.DOM.td({key: i++}, "Number of Eatings"),
