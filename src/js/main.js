@@ -7,14 +7,13 @@ const environment = require('./environment.js');
 const stats = require('./stats.js');
 const tinytic = require('tinytic');
 
-const analysisView = AnalysisView();
 var gobblers = [];
-
-var i;
+const analysisView = AnalysisView();
 
 const calculateRadius = ({energy}) => Math.sqrt(energy);
 const calculateAttackStrength = ({attackCoefficient, energy}) => attackCoefficient * energy;
 const calculateDefenceStrength = ({defenceCoefficient, energy}) => defenceCoefficient * energy;
+
 const photosynthesize = (gobbler, environment) => {
 	const energyProduced = gobbler.photosynthesisCoefficient * calculateRadius(gobbler) * environment.light() *
 		environment.carbonDioxideLevel / environment.initialGobblersCount / 1000;
@@ -89,11 +88,11 @@ const reproduce = (gobbler, stats) => {
 		gobblers[gobblers.length] = createGobbler(gobblerParams);
 		gobbler.x += xDisplacement;
 		gobbler.y += yDisplacement;
-		gobbler.energy = gobbler.energy/2;
+		gobbler.energy = gobbler.energy / 2;
 		mutate(gobbler);
 		mutate(gobblers[gobblers.length - 1]);
 		if (stats.intYoungestGen < gobbler.generation) {
-			stats.intYoungestGen = gobblers[i].generation;
+			stats.intYoungestGen = gobbler.generation;
 		}
 	}
 	return gobbler;
@@ -152,7 +151,7 @@ const checkContact = (gobbler0, gobbler1) => {
 };
 
 //initial spawn
-for (i = 0; i < environment.initialGobblersCount; i++) {
+for (let i = 0; i < environment.initialGobblersCount; i++) {
 	let gobblerParams = {
 		x: 0,
 		y: 0,
@@ -181,7 +180,7 @@ for (i = 0; i < environment.initialGobblersCount; i++) {
 
 	gobblers = R.sort((gobbler0, gobbler1) => gobbler0.x - gobbler1.x, gobblers);
 
-	for (i = 0; i < gobblers.length; i++) {
+	for (let i = 0; i < gobblers.length; i++) {
 		let gobbler0 = gobblers[i];
 		let j = i - 1;
 
