@@ -1,5 +1,5 @@
 const autoprefixer = require('gulp-autoprefixer');
-const babel = require('gulp-babel');
+const babelify = require('babelify');
 const buffer = require('vinyl-buffer');
 const browserify = require('browserify');
 const connect = require('gulp-connect');
@@ -35,29 +35,25 @@ gulp.task("html", function () {
 });
 
 gulp.task("jsDev", function () {
-  const bundler = watchify(browserify(jsPath, R.assoc("debug", true, watchify.args)));
-
-  bundler.bundle()
+  watchify(browserify(jsPath, R.assoc("debug", true, watchify.args)))
+    .transform(babelify)
+    .bundle()
     .on('error', gutil.log.bind(gutil, 'Browserify Error'))
     .pipe(source("bundle.js"))
     .pipe(plumber())
     .pipe(buffer())
     .pipe(sourcemaps.init({loadMaps: true}))
-    .pipe(babel())
     .pipe(sourcemaps.write('./'))
     .pipe(gulp.dest('dist'));
 });
 
 gulp.task("jsProd", function () {
-  const bundler = browserify({
-    entries: jsPath
-  });
-
-  bundler.bundle()
+  browserify({entries: jsPath})
+    .transform(babelify)
+    .bundle()
     .on('error', gutil.log.bind(gutil, 'Browserify Error'))
     .pipe(source("bundle.js"))
     .pipe(buffer())
-    .pipe(babel())
     .pipe(uglify())
     .pipe(gulp.dest('dist'));
 });
