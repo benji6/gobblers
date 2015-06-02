@@ -2,6 +2,7 @@ const R = require('ramda');
 
 const AnalysisView = require('./AnalysisView.jsx');
 const canvasView = require('./canvasView.js');
+const createGobbler = require('./createGobbler.js');
 const environment = require('./environment.js');
 const stats = require('./stats.js');
 const tinytic = require('tinytic');
@@ -10,21 +11,6 @@ const analysisView = AnalysisView();
 var gobblers = [];
 
 var i;
-function Gobbler({
-	energy, x, y, v, attackCoefficient, defenceCoefficient, photosynthesisCoefficient, generation
-}) {
-	this.attackCoefficient = attackCoefficient;
-	this.defenceCoefficient = defenceCoefficient;
-	this.energy = energy;
-	this.generation = generation;
-	this.metabolism = 0.001;
-	this.mutationCoefficient = 0.5;
-	this.photosynthesisCoefficient = photosynthesisCoefficient;
-	this.threshold = 12;
-	this.v = v;
-	this.x = x;
-	this.y = y;
-}
 
 const calculateRadius = ({energy}) => Math.sqrt(energy);
 const calculateAttackStrength = ({attackCoefficient, energy}) => attackCoefficient * energy;
@@ -100,7 +86,7 @@ const reproduce = (gobbler, stats) => {
 			generation: gobbler.generation,
 			photosynthesisCoefficient: gobbler.photosynthesisCoefficient
 		};
-		gobblers[gobblers.length] = new Gobbler(gobblerParams);
+		gobblers[gobblers.length] = createGobbler(gobblerParams);
 		gobbler.x += xDisplacement;
 		gobbler.y += yDisplacement;
 		gobbler.energy = gobbler.energy/2;
@@ -177,7 +163,7 @@ for (i = 0; i < environment.initialGobblersCount; i++) {
 		generation: 0,
 		photosynthesisCoefficient: 1
 	};
-	gobblers[i] = new Gobbler(gobblerParams);
+	gobblers[i] = createGobbler(gobblerParams);
 	let radius = calculateRadius(gobblers[i]);
 	gobblers[i].x = Math.random()*(canvasView.canvas.width-2* radius) + radius;
 	gobblers[i].y = Math.random()*(canvasView.canvas.height-2* radius) + radius;
