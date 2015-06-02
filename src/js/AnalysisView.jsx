@@ -83,6 +83,8 @@ module.exports = () => {
           <tr>
             <td>Oldest Generation</td>
             <td>{intOldestGen}</td>
+            <td className="right">Seconds Elapsed</td>
+            <td>{this.props.secondsElapsed}</td>
           </tr>
         </tbody>
       </table>;

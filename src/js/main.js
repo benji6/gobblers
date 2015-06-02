@@ -4,6 +4,7 @@ const AnalysisView = require('./AnalysisView.jsx');
 const canvasView = require('./canvasView.js');
 const environment = require('./environment.js');
 const stats = require('./stats.js');
+const tinytic = require('tinytic');
 
 const analysisView = AnalysisView();
 var gobblers = [];
@@ -231,6 +232,7 @@ for (i = 0; i < environment.initialGobblersCount; i++) {
 	analysisView.render({
 		environment,
 		stats,
+		secondsElapsed: (tinytic.total() / 1000).toFixed(0),
 	});
 
 	canvasView.render({
