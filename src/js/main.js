@@ -1,6 +1,6 @@
 const R = require('ramda');
 
-const AnalysisView = require('./AnalysisView.js');
+const AnalysisView = require('./AnalysisView.jsx');
 const canvasView = require('./canvasView.js');
 const environment = require('./environment.js');
 const stats = require('./stats.js');

@@ -75,7 +75,7 @@ gulp.task("sass", function () {
 
 gulp.task("watch", function () {
   gulp.start("jsDev", "html", "sass", "connect");
-  gulp.watch("src/js/**/*.js", ["jsDev"]);
+  gulp.watch("src/js/**/*.js*", ["jsDev"]);
   gulp.watch(htmlPath, ["html"]);
   gulp.watch(sassPath, ["sass"]);
   gulp.watch(distPath + "/*", ["reload"]);
