@@ -1,9 +1,8 @@
 const React = require('react');
 
-module.exports = function () {
-  var i = 0;
+module.exports = () => {
   const View = React.createClass({
-    render: function () {
+  render: function () {
       const {
         deathCount,
         eatCount,
@@ -25,66 +24,68 @@ module.exports = function () {
         oxygenLevel,
       } = environment;
 
-      return React.DOM.table(null, [
-        React.DOM.thead({key: i++}, [
-          React.DOM.th({key: i++}, "High-Level Analysis"),
-          React.DOM.th({key: i++}, "Output"),
-          React.DOM.th({key: i++}, "Gobbler Analysis"),
-          React.DOM.th({key: i++}, "Output"),
-        ]),
-        React.DOM.tbody({key: i++}, [
-          React.DOM.tr({key: i++}, [
-            React.DOM.td({key: i++}, "Light Level"),
-            React.DOM.td({key: i++}, lightLevel),
-            React.DOM.td({key: i++}, "Average Energy"),
-            React.DOM.td({key: i++}, (totalEnergy / totalGobblers).toFixed(2)),
-          ]),
-          React.DOM.tr({key: i++}, [
-            React.DOM.td({key: i++}, "Oxygen Level"),
-            React.DOM.td({key: i++}, oxygenLevel.toFixed(0)),
-            React.DOM.td({key: i++}, "Average Velocity Coefficient"),
-            React.DOM.td({key: i++}, (totalVelocityCoefficient / totalGobblers).toFixed(2)),
-          ]),
-          React.DOM.tr({key: i++}, [
-            React.DOM.td({key: i++}, "Carbon Dioxide Level"),
-            React.DOM.td({key: i++}, carbonDioxideLevel.toFixed(0)),
-            React.DOM.td({key: i++}, "Average Attack Coefficient"),
-            React.DOM.td({key: i++}, (totalAttackCoefficient / totalGobblers).toFixed(2)),
-          ]),
-          React.DOM.tr({key: i++}, [
-            React.DOM.td({key: i++}, "Total Energy"),
-            React.DOM.td({key: i++}, totalEnergy.toFixed(0)),
-            React.DOM.td({key: i++}, "Average Defence Coefficient"),
-            React.DOM.td({key: i++}, (totalDefenceCoefficient / totalGobblers).toFixed(2)),
-          ]),
-          React.DOM.tr({key: i++}, [
-            React.DOM.td({key: i++}, "Number of Gobblers"),
-            React.DOM.td({key: i++}, totalGobblers),
-            React.DOM.td({key: i++}, "Average Photosynthesis Coefficient"),
-            React.DOM.td({key: i++}, (totalPhotosynthesisCoefficient / totalGobblers).toFixed(2)),
-          ]),
-          React.DOM.tr({key: i++}, [
-            React.DOM.td({key: i++}, "Number of Eatings"),
-            React.DOM.td({key: i++}, eatCount),
-          ]),
-          React.DOM.tr({key: i++}, [
-            React.DOM.td({key: i++}, "Reproduction Count"),
-            React.DOM.td({key: i++}, reproductionCount),
-          ]),
-          React.DOM.tr({key: i++}, [
-            React.DOM.td({key: i++}, "Death Count"),
-            React.DOM.td({key: i++}, deathCount),
-          ]),
-          React.DOM.tr({key: i++}, [
-            React.DOM.td({key: i++}, "Youngest Generation"),
-            React.DOM.td({key: i++}, intYoungestGen),
-          ]),
-          React.DOM.tr({key: i++}, [
-            React.DOM.td({key: i++}, "Oldest Generation"),
-            React.DOM.td({key: i++}, intOldestGen),
-          ]),
-        ])
-      ]);
+      return <table>
+        <thead>
+          <tr>
+            <th>High-Level Analysis</th>
+            <th>Output</th>
+            <th>Gobbler Analysis</th>
+            <th>Output</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Light Level</td>
+            <td>{lightLevel}</td>
+            <td>Average Energy</td>
+            <td>{(totalEnergy / totalGobblers).toFixed(2)}</td>
+          </tr>
+          <tr>
+            <td>Oxygen Level</td>
+            <td>{oxygenLevel.toFixed(0)}</td>
+            <td>Average Velocity Coefficient</td>
+            <td>{(totalVelocityCoefficient / totalGobblers).toFixed(2)}</td>
+          </tr>
+          <tr>
+            <td>Carbon Dioxide Level</td>
+            <td>{carbonDioxideLevel.toFixed(0)}</td>
+            <td>Average Attack Coefficient</td>
+            <td>{(totalAttackCoefficient / totalGobblers).toFixed(2)}</td>
+          </tr>
+          <tr>
+            <td>Total Energy</td>
+            <td>{totalEnergy.toFixed(0)}</td>
+            <td>Average Defence Coefficient</td>
+            <td>{(totalDefenceCoefficient / totalGobblers).toFixed(2)}</td>
+          </tr>
+          <tr>
+            <td>Number of Gobblers</td>
+            <td>{totalGobblers}</td>
+            <td>Average Photosynthesis Coefficient</td>
+            <td>{(totalPhotosynthesisCoefficient / totalGobblers).toFixed(2)}</td>
+          </tr>
+          <tr>
+            <td>Number of Eatings</td>
+            <td>{eatCount}</td>
+          </tr>
+          <tr>
+            <td>Reproduction Count</td>
+            <td>{reproductionCount}</td>
+          </tr>
+          <tr>
+            <td>Death Count</td>
+            <td>{deathCount}</td>
+          </tr>
+          <tr>
+            <td>Youngest Generation</td>
+            <td>{intYoungestGen}</td>
+          </tr>
+          <tr>
+            <td>Oldest Generation</td>
+            <td>{intOldestGen}</td>
+          </tr>
+        </tbody>
+      </table>;
     }
   });
 
@@ -92,7 +93,6 @@ module.exports = function () {
   const container = document.querySelector("#stats_container");
 
   return {
-    container,
     render: function (params) {
       React.render(
         ViewFactory(params),

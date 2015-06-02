@@ -9,6 +9,7 @@ const minifyCSS = require('gulp-minify-css');
 const minifyHTML = require('gulp-minify-html');
 const plumber = require('gulp-plumber');
 const R = require('ramda');
+const reactify = require('reactify');
 const sass = require('gulp-sass');
 const source = require('vinyl-source-stream');
 const sourcemaps = require('gulp-sourcemaps');
@@ -36,6 +37,7 @@ gulp.task("html", function () {
 
 gulp.task("jsDev", function () {
   watchify(browserify(jsPath, R.assoc("debug", true, watchify.args)))
+    .transform(reactify)
     .transform(babelify)
     .bundle()
     .on('error', gutil.log.bind(gutil, 'Browserify Error'))
@@ -49,6 +51,7 @@ gulp.task("jsDev", function () {
 
 gulp.task("jsProd", function () {
   browserify({entries: jsPath})
+    .transform(reactify)
     .transform(babelify)
     .bundle()
     .on('error', gutil.log.bind(gutil, 'Browserify Error'))
