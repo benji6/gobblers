@@ -1,7 +1,9 @@
 const canvasView = require('./canvasView.js');
 
-const initialGobblersCount = canvasView.canvas.height > canvasView.canvas.width ?
-	canvasView.canvas.width : canvasView.canvas.height;
+const sideLength = window.innerHeight > window.innerWidth ?
+	window.innerWidth :
+	window.innerHeight;
+const initialGobblersCount = sideLength;
 const initialGobblerEnergy = 6;
 
 const oxygenLevel = initialGobblersCount * initialGobblerEnergy;
@@ -19,6 +21,7 @@ module.exports = {
 	maximumSpeed: 3,
 	oxygenLevel,
 	maxEvolutionPoints: 8,
-	getWidth: () => canvasView.canvas.width,
-	getHeight: () => canvasView.canvas.height,
+	sideLength: window.innerHeight > window.innerWidth ?
+	  window.innerWidth :
+	  window.innerHeight,
 };

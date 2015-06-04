@@ -117,8 +117,8 @@ for (let i = 0; i < environment.initialGobblersCount; i++) {
 	};
 	gobblers[i] = createGobbler(gobblerParams);
 	let radius = calculateRadius(gobblers[i]);
-	gobblers[i].x = Math.random()*(canvasView.canvas.width-2* radius) + radius;
-	gobblers[i].y = Math.random()*(canvasView.canvas.height-2* radius) + radius;
+	gobblers[i].x = Math.random() * (environment.sideLength - 2 * radius) + radius;
+	gobblers[i].y = Math.random() * (environment.sideLength - 2 * radius) + radius;
 	mutate(gobblers[i]);
 }
 

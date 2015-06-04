@@ -1,14 +1,13 @@
 const R = require('ramda');
 
 const calculateRadius = require('./calculateRadius.js');
-const canvasView = require('./canvasView.js');
 
 const calculateMaxSpeed = ({v, energy}) => v * energy / 2;
 const plusOrMinus = (x) => Math.round(Math.random()) ? x : -x;
 
 const calculateEffectsOnEnergyAndAtmosphere = (gobbler, environment, xDistance, yDistance) => {
   const totalDistance = Math.pow((Math.pow(xDistance, 2), Math.pow(yDistance, 2)), 0.5);
-  const energyUsed = totalDistance / canvasView.canvas.width;
+  const energyUsed = totalDistance / environment.sideLength;
   gobbler.energy -= energyUsed;
   environment.increaseAtmosphereOxygenComposition(-energyUsed);
   return gobbler;
@@ -23,7 +22,7 @@ const random = (gobbler, environment) => {
 	if (gobbler.x <= radius + speed) {
 		gobbler.x += xDistance;
 	} else {
-    gobbler.x += gobbler.x >= canvasView.canvas.width - radius - speed ?
+    gobbler.x += gobbler.x >= environment.sideLength - radius - speed ?
       -xDistance :
       plusOrMinus(xDistance);
 	}
@@ -31,7 +30,7 @@ const random = (gobbler, environment) => {
 	if (gobbler.y <= radius + speed) {
 		gobbler.y += yDistance;
 	} else {
-		if (gobbler.y >= canvasView.canvas.height - radius - speed) {
+		if (gobbler.y >= environment.sideLength - radius - speed) {
 			gobbler.y -= yDistance;
 		} else {
 			gobbler.y += plusOrMinus(yDistance);
@@ -46,7 +45,7 @@ const right = (gobbler, environment) => {
 	const radius = calculateRadius(gobbler);
   const xDistance = Math.random() * speed;
 
-  gobbler.x += gobbler.x >= canvasView.canvas.width - radius - speed ?
+  gobbler.x += gobbler.x >= environment.sideLength - radius - speed ?
     -xDistance :
     xDistance;
 
@@ -82,7 +81,7 @@ const bottom = (gobbler, environment) => {
 	const radius = calculateRadius(gobbler);
   const yDistance = Math.random() * speed;
 
-  gobbler.y += gobbler.y >= canvasView.canvas.width - radius - speed ?
+  gobbler.y += gobbler.y >= environment.sideLength - radius - speed ?
     -yDistance :
     yDistance;
 
@@ -100,7 +99,7 @@ const edge = (gobbler, environment) => {
       fn: left,
     },
     {
-      dist: environment.getWidth() - x,
+      dist: environment.sideLength - x,
       fn: right,
     },
     {
@@ -108,7 +107,7 @@ const edge = (gobbler, environment) => {
       fn: top,
     },
     {
-      dist: environment.getHeight() - y,
+      dist: environment.sideLength - y,
       fn: bottom,
     },
   ]).fn(gobbler, environment);

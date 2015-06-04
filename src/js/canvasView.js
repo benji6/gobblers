@@ -1,6 +1,7 @@
 const R = require('ramda');
 
 const calculateRadius = require('./calculateRadius.js');
+const environment = require('./environment');
 const canvas = document.querySelector("canvas");
 const context = canvas.getContext('2d');
 
@@ -10,14 +11,10 @@ const calculateColor = (totalGobblers, totalAttackCoefficient, totalDefenceCoeff
     ${(defenceCoefficient / totalDefenceCoefficient * totalGobblers * 127).toFixed(0)},
     ${(photosynthesisCoefficient / totalPhotosynthesisCoefficient * totalGobblers * 127).toFixed(0)})`;
 
-canvas.width = window.innerHeight > window.innerWidth ?
-  window.innerWidth :
-  window.innerHeight;
-canvas.height = canvas.width;
+canvas.height = canvas.width = environment.sideLength;
 
 module.exports = {
-  canvas,
-  render: function ({gobblers, lightLevel, totalAttackCoefficient, totalDefenceCoefficient, totalPhotosynthesisCoefficient}) {
+  render: ({gobblers, lightLevel, totalAttackCoefficient, totalDefenceCoefficient, totalPhotosynthesisCoefficient}) => {
     context.fillStyle = `rgb(${lightLevel}, ${lightLevel}, ${lightLevel})`;
     context.fillRect(0, 0, canvas.width, canvas.height);
     R.forEach((gobbler) => {
