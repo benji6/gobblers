@@ -1,34 +1,96 @@
 const calculateRadius = require('./calculateRadius.js');
 const canvasView = require('./canvasView.js');
 
+const calculateMaxSpeed = ({v, energy}) => v * energy / 2;
+const plusOrMinus = (x) => Math.round(Math.random()) ? x : -x;
+
+const calculateEffectsOnEnergyAndAtmosphere = (gobbler, environment, xDistance, yDistance) => {
+  const totalDistance = Math.pow((Math.pow(xDistance, 2), Math.pow(yDistance, 2)), 0.5);
+  const energyUsed = totalDistance / canvasView.canvas.width / 8;
+  gobbler.energy -= energyUsed;
+  environment.increaseAtmosphereOxygenComposition(-energyUsed);
+  return gobbler;
+};
+
 const random = (gobbler, environment) => {
-	const speed = gobbler.v * gobbler.energy * environment.oxygenLevel / environment.initialGobblersCount;
+	const speed = calculateMaxSpeed(gobbler);
 	const radius = calculateRadius(gobbler);
+  const xDistance = Math.random() * speed;
+  const yDistance = Math.random() * speed;
 
 	if (gobbler.x <= radius + speed) {
-		gobbler.x += Math.random() / 2 * speed;
+		gobbler.x += xDistance;
 	} else {
-		if (gobbler.x >= canvasView.canvas.width - radius - speed / 2) {
-			gobbler.x -= Math.random() / 2 * speed;
-		} else {
-			gobbler.x += (Math.random() - 0.5) * speed;
-		}
+    gobbler.x += gobbler.x >= canvasView.canvas.width - radius - speed ?
+      -xDistance :
+      plusOrMinus(xDistance);
 	}
+
 	if (gobbler.y <= radius + speed) {
-		gobbler.y += Math.random() / 2 * speed;
+		gobbler.y += yDistance;
 	} else {
-		if (gobbler.y>=canvasView.canvas.height- radius -speed/2) {
-			gobbler.y-=Math.random() / 2 * speed;
+		if (gobbler.y >= canvasView.canvas.height - radius - speed) {
+			gobbler.y -= yDistance;
 		} else {
-			gobbler.y+=(Math.random() - 0.5) * speed;
+			gobbler.y += plusOrMinus(yDistance);
 		}
 	}
-	const energyUsed = gobbler.energy * speed / canvasView.canvas.width / 8;
-	gobbler.energy -= energyUsed;
-	environment.increaseAtmosphereOxygenComposition(-energyUsed);
-	return gobbler;
+
+  return calculateEffectsOnEnergyAndAtmosphere(gobbler, environment, xDistance, yDistance);
+};
+
+const right = (gobbler, environment) => {
+	const speed = calculateMaxSpeed(gobbler);
+	const radius = calculateRadius(gobbler);
+  const xDistance = Math.random() * speed;
+
+  gobbler.x += gobbler.x >= canvasView.canvas.width - radius - speed ?
+    -xDistance :
+    xDistance;
+
+  return calculateEffectsOnEnergyAndAtmosphere(gobbler, environment, xDistance, 0);
+};
+
+const left = (gobbler, environment) => {
+	const speed = calculateMaxSpeed(gobbler);
+	const radius = calculateRadius(gobbler);
+  const xDistance = Math.random() * speed;
+
+  gobbler.x += gobbler.x <= radius + speed ?
+    xDistance :
+    -xDistance;
+
+  return calculateEffectsOnEnergyAndAtmosphere(gobbler, environment, xDistance, 0);
+};
+
+const bottom = (gobbler, environment) => {
+	const speed = calculateMaxSpeed(gobbler);
+	const radius = calculateRadius(gobbler);
+  const yDistance = Math.random() * speed;
+
+  gobbler.y += gobbler.y <= radius + speed ?
+    yDistance :
+    -yDistance;
+
+  return calculateEffectsOnEnergyAndAtmosphere(gobbler, environment, 0, yDistance);
+};
+
+const top = (gobbler, environment) => {
+	const speed = calculateMaxSpeed(gobbler);
+	const radius = calculateRadius(gobbler);
+  const yDistance = Math.random() * speed;
+
+  gobbler.y += gobbler.y >= canvasView.canvas.width - radius - speed ?
+    -yDistance :
+    yDistance;
+
+  return calculateEffectsOnEnergyAndAtmosphere(gobbler, environment, 0, yDistance);
 };
 
 module.exports = [
-  random
+  random,
+  right,
+  left,
+  top,
+  bottom,
 ];

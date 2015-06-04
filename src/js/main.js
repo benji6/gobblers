@@ -8,9 +8,6 @@ const createGobbler = require('./createGobbler.js');
 const environment = require('./environment.js');
 const stats = require('./stats.js');
 
-const movementAlgorithms = require('./movementAlgorithms.js');
-const move = movementAlgorithms[0];
-
 var gobblers = [];
 const analysisView = AnalysisView();
 
@@ -33,6 +30,8 @@ const attack = (gobbler0, gobbler1, stats) => {
 	}
 	return gobbler0;
 };
+
+const move = (gobbler, environment) => gobbler.movementAlgorithm(gobbler, environment);
 
 const respire = (gobbler, environment) => {
 	const energyUsed = gobbler.energy * gobbler.metabolism;
@@ -58,7 +57,8 @@ const reproduce = (gobbler, stats) => {
 			attackCoefficient: gobbler.attackCoefficient,
 			defenceCoefficient: gobbler.defenceCoefficient,
 			generation: gobbler.generation,
-			photosynthesisCoefficient: gobbler.photosynthesisCoefficient
+			photosynthesisCoefficient: gobbler.photosynthesisCoefficient,
+			movementAlgorithm: gobbler.movementAlgorithm,
 		};
 		gobblers[gobblers.length] = createGobbler(gobblerParams);
 		gobbler.x += xDisplacement;
