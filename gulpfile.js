@@ -1,16 +1,16 @@
-const autoprefixer = require('gulp-autoprefixer');
 const babelify = require('babelify');
 const buffer = require('vinyl-buffer');
 const browserify = require('browserify');
+const cssnext = require('cssnext');
+const csswring = require('csswring');
 const connect = require('gulp-connect');
 const gulp = require('gulp');
 const gutil = require('gulp-util');
-const minifyCSS = require('gulp-minify-css');
 const minifyHTML = require('gulp-minify-html');
 const plumber = require('gulp-plumber');
+const postcss = require('gulp-postcss');
 const R = require('ramda');
 const reactify = require('reactify');
-const sass = require('gulp-sass');
 const source = require('vinyl-source-stream');
 const sourcemaps = require('gulp-sourcemaps');
 const uglify = require('gulp-uglify');
@@ -18,7 +18,6 @@ const watchify = require('watchify');
 
 const htmlPath = "src/html/index.html";
 const jsPath = "src/js/main.js";
-const sassPath = "src/sass/style.scss";
 const distPath = "dist";
 
 gulp.task("connect", function () {
@@ -46,7 +45,7 @@ gulp.task("jsDev", function () {
     .pipe(buffer())
     .pipe(sourcemaps.init({loadMaps: true}))
     .pipe(sourcemaps.write('./'))
-    .pipe(gulp.dest('dist'));
+    .pipe(gulp.dest("dist"));
 });
 
 gulp.task("jsProd", function () {
@@ -58,28 +57,26 @@ gulp.task("jsProd", function () {
     .pipe(source("bundle.js"))
     .pipe(buffer())
     .pipe(uglify())
-    .pipe(gulp.dest('dist'));
+    .pipe(gulp.dest("dist"));
 });
 
-gulp.task("sass", function () {
-  gulp.src(sassPath)
+gulp.task('css', function () {
+  return gulp.src("src/css/style.css")
     .pipe(plumber())
-    .pipe(sass())
-    .pipe(autoprefixer({
-      browsers: ["> 1%", "last 3 versions"],
-      cascade: false
-    }))
-    .pipe(minifyCSS())
-    .pipe(gulp.dest(distPath));
+    .pipe(postcss([
+      cssnext(),
+      csswring
+    ]))
+    .pipe(gulp.dest("dist"));
 });
 
 gulp.task("watch", function () {
-  gulp.start("jsDev", "html", "sass", "connect");
+  gulp.start("jsDev", "css", "html", "connect");
   gulp.watch("src/js/**/*.js*", ["jsDev"]);
   gulp.watch(htmlPath, ["html"]);
-  gulp.watch(sassPath, ["sass"]);
+  gulp.watch("src/css/**/*.css", ["css"]);
   gulp.watch(distPath + "/*", ["reload"]);
 });
 
-gulp.task("build", ["jsProd", "html", "sass"]);
+gulp.task("build", ["jsProd", "css", "html"]);
 gulp.task("default", ["watch"]);
