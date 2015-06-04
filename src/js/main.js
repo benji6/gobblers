@@ -7,6 +7,7 @@ const canvasView = require('./canvasView.js');
 const createGobbler = require('./createGobbler.js');
 const environment = require('./environment.js');
 const stats = require('./stats.js');
+const mutate = require('./mutate.js');
 
 var gobblers = [];
 const analysisView = AnalysisView();
@@ -71,29 +72,6 @@ const reproduce = (gobbler, stats) => {
 		}
 	}
 	return gobbler;
-};
-
-const mutate = (gobbler) => {
-	const mutateProp = (prop) => {
-		prop += prop * (Math.random() - 0.5) * gobbler.mutationCoefficient;
-		if (prop < 0) {
-			prop = 0.000001;
-		}
-		return prop;
-	};
-	gobbler.v = mutateProp(gobbler.v);
-	gobbler.attackCoefficient = mutateProp(gobbler.attackCoefficient);
-	gobbler.defenceCoefficient = mutateProp(gobbler.defenceCoefficient);
-	gobbler.photosynthesisCoefficient = mutateProp(gobbler.photosynthesisCoefficient);
-	//enforce restrictions
-	var currentEvolutionPoints = gobbler.v + gobbler.attackCoefficient + gobbler.defenceCoefficient + gobbler.photosynthesisCoefficient;
-	var mutationEnforcementRatio = environment.maxEvolutionPoints / currentEvolutionPoints;
-	if (currentEvolutionPoints > environment.maxEvolutionPoints) {
-		gobbler.v = gobbler.v * mutationEnforcementRatio;
-		gobbler.attackCoefficient = gobbler.attackCoefficient * mutationEnforcementRatio;
-		gobbler.defenceCoefficient = gobbler.defenceCoefficient * mutationEnforcementRatio;
-		gobbler.photosynthesisCoefficient = gobbler.photosynthesisCoefficient * mutationEnforcementRatio;
-	}
 };
 
 const removeDead = R.filter((gobbler) => {
