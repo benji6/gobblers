@@ -40,14 +40,10 @@ table {
   margin: 2em auto;
   padding: 0.5em;
   text-align: left;
+}
 
-  td {
-    padding: 0.1em 0.5em;
-  }
-
-  th {
-    @extend td;
-  }
+td, th {
+  padding: 0.1em 0.5em;
 }
 
 .hidden {
