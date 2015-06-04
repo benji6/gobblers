@@ -87,7 +87,10 @@ const top = (gobbler, environment) => {
   return calculateEffectsOnEnergyAndAtmosphere(gobbler, environment, 0, yDistance);
 };
 
+const immobile = (x) => x;
+
 module.exports = [
+  immobile,
   random,
   right,
   left,
