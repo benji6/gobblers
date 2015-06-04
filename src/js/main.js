@@ -1,16 +1,19 @@
 const R = require('ramda');
+const tinytic = require('tinytic');
 
 const AnalysisView = require('./AnalysisView.jsx');
+const calculateRadius = require('./calculateRadius.js');
 const canvasView = require('./canvasView.js');
 const createGobbler = require('./createGobbler.js');
 const environment = require('./environment.js');
 const stats = require('./stats.js');
-const tinytic = require('tinytic');
+
+const movementAlgorithms = require('./movementAlgorithms.js');
+const move = movementAlgorithms[0];
 
 var gobblers = [];
 const analysisView = AnalysisView();
 
-const calculateRadius = ({energy}) => Math.sqrt(energy);
 const calculateAttackStrength = ({attackCoefficient, energy}) => attackCoefficient * energy;
 const calculateDefenceStrength = ({defenceCoefficient, energy}) => defenceCoefficient * energy;
 
@@ -19,34 +22,6 @@ const photosynthesize = (gobbler, environment) => {
 		environment.carbonDioxideLevel / environment.initialGobblersCount / 1000;
 	gobbler.energy += energyProduced;
 	environment.increaseAtmosphereOxygenComposition(energyProduced);
-	return gobbler;
-};
-
-const move = (gobbler, environment) => {
-	const speed = gobbler.v * gobbler.energy * environment.oxygenLevel / environment.initialGobblersCount;
-	const radius = calculateRadius(gobbler);
-
-	if (gobbler.x <= radius + speed) {
-		gobbler.x += Math.random() / 2 * speed;
-	} else {
-		if (gobbler.x >= canvasView.canvas.width - radius - speed / 2) {
-			gobbler.x -= Math.random() / 2 * speed;
-		} else {
-			gobbler.x += (Math.random() - 0.5) * speed;
-		}
-	}
-	if (gobbler.y <= radius + speed) {
-		gobbler.y += Math.random() / 2 * speed;
-	} else {
-		if (gobbler.y>=canvasView.canvas.height- radius -speed/2) {
-			gobbler.y-=Math.random() / 2 * speed;
-		} else {
-			gobbler.y+=(Math.random() - 0.5) * speed;
-		}
-	}
-	const energyUsed = gobbler.energy * speed / canvasView.canvas.width / 8;
-	gobbler.energy -= energyUsed;
-	environment.increaseAtmosphereOxygenComposition(-energyUsed);
 	return gobbler;
 };
 

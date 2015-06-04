@@ -1,18 +1,19 @@
 const R = require('ramda');
 
+const calculateRadius = require('./calculateRadius.js');
 const canvas = document.querySelector("canvas");
-canvas.width = window.innerHeight > window.innerWidth ?
-  window.innerWidth :
-  window.innerHeight;
-canvas.height = canvas.width;
 const context = canvas.getContext('2d');
 
-const calculateRadius = ({energy}) => Math.sqrt(energy);
 const calculateColor = (totalGobblers, totalAttackCoefficient, totalDefenceCoefficient, totalPhotosynthesisCoefficient, {
   attackCoefficient, defenceCoefficient, photosynthesisCoefficient
 }) => `rgb(${(attackCoefficient / totalAttackCoefficient * totalGobblers * 127).toFixed(0)},
     ${(defenceCoefficient / totalDefenceCoefficient * totalGobblers * 127).toFixed(0)},
     ${(photosynthesisCoefficient / totalPhotosynthesisCoefficient * totalGobblers * 127).toFixed(0)})`;
+
+canvas.width = window.innerHeight > window.innerWidth ?
+  window.innerWidth :
+  window.innerHeight;
+canvas.height = canvas.width;
 
 module.exports = {
   canvas,
