@@ -19,4 +19,6 @@ module.exports = {
 	maximumSpeed: 3,
 	oxygenLevel,
 	maxEvolutionPoints: 8,
+	getWidth: () => canvasView.canvas.width,
+	getHeight: () => canvasView.canvas.height,
 };

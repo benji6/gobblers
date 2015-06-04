@@ -1,3 +1,5 @@
+const R = require('ramda');
+
 const calculateRadius = require('./calculateRadius.js');
 const canvasView = require('./canvasView.js');
 
@@ -63,7 +65,7 @@ const left = (gobbler, environment) => {
   return calculateEffectsOnEnergyAndAtmosphere(gobbler, environment, xDistance, 0);
 };
 
-const bottom = (gobbler, environment) => {
+const top = (gobbler, environment) => {
 	const speed = calculateMaxSpeed(gobbler);
 	const radius = calculateRadius(gobbler);
   const yDistance = Math.random() * speed;
@@ -75,7 +77,7 @@ const bottom = (gobbler, environment) => {
   return calculateEffectsOnEnergyAndAtmosphere(gobbler, environment, 0, yDistance);
 };
 
-const top = (gobbler, environment) => {
+const bottom = (gobbler, environment) => {
 	const speed = calculateMaxSpeed(gobbler);
 	const radius = calculateRadius(gobbler);
   const yDistance = Math.random() * speed;
@@ -89,11 +91,31 @@ const top = (gobbler, environment) => {
 
 const immobile = (x) => x;
 
+const edge = (gobbler, environment) => {
+  const {x, y} = gobbler;
+
+  return R.minBy((obj) => obj.dist, [
+    {
+      dist: x,
+      fn: left,
+    },
+    {
+      dist: environment.getWidth() - x,
+      fn: right,
+    },
+    {
+      dist: y,
+      fn: top,
+    },
+    {
+      dist: environment.getHeight() - y,
+      fn: bottom,
+    },
+  ]).fn(gobbler, environment);
+};
+
 module.exports = [
+  edge,
   immobile,
   random,
-  right,
-  left,
-  top,
-  bottom,
 ];
