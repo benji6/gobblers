@@ -111,8 +111,48 @@ const edge = (gobbler, environment) => {
   ]).fn(gobbler, environment);
 };
 
+const backAndForth = (gobbler, environment) => {
+	const speed = calculateMaxSpeed(gobbler);
+	const radius = gobbler.calculateRadius();
+  const xDistance = Math.random() * speed;
+  const {x} = gobbler;
+
+  if (x >= environment.sideLength - radius - speed) {
+    gobbler.currentDirection = -1;
+  } else if (x <= radius + speed) {
+    gobbler.currentDirection = 1;
+  } else {
+    gobbler.currentDirection = gobbler.currentDirection || 1;
+  }
+
+  gobbler.x += xDistance * gobbler.currentDirection;
+
+  return calculateEffectsOnEnergyAndAtmosphere(gobbler, environment, xDistance, 0);
+};
+
+const upAndDown = (gobbler, environment) => {
+	const speed = calculateMaxSpeed(gobbler);
+	const radius = gobbler.calculateRadius();
+  const yDistance = Math.random() * speed;
+  const {y} = gobbler;
+
+  if (y >= environment.sideLength - radius - speed) {
+    gobbler.currentDirection = -1;
+  } else if (y <= radius + speed) {
+    gobbler.currentDirection = 1;
+  } else {
+    gobbler.currentDirection = gobbler.currentDirection || 1;
+  }
+
+  gobbler.y += yDistance * gobbler.currentDirection;
+
+  return calculateEffectsOnEnergyAndAtmosphere(gobbler, environment, 0, yDistance);
+};
+
 module.exports = [
+  backAndForth,
   edge,
   immobile,
   random,
+  upAndDown,
 ];
