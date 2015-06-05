@@ -73,12 +73,8 @@ for (let i = 0; i < environment.initialGobblersCount; i++) {
 
 (function animationloop () {
 	window.requestAnimationFrame(animationloop);
-	stats.totalEnergy = 0;
-	stats.intOldestGen = stats.intYoungestGen;
-	stats.totalVelocityCoefficient = 0;
-	stats.totalPhotosynthesisCoefficient = 0;
-	stats.totalAttackCoefficient = 0;
-	stats.totalDefenceCoefficient = 0;
+
+	stats.resetValuesCalculatedEachIteration();
 
 	gobblers = R.sort((gobbler0, gobbler1) => gobbler0.x - gobbler1.x, gobblers);
 
@@ -102,20 +98,13 @@ for (let i = 0; i < environment.initialGobblersCount; i++) {
 			j++;
 		}
 
-		gobblers[i]
+		gobbler0
 			.photosynthesize(environment)
 			.move(environment)
 			.reproduce(stats, gobblers)
 			.respire(environment);
 
-		stats.totalEnergy += gobbler0.energy;
-		stats.intOldestGen = stats.intOldestGen > gobbler0.generation ?
-			gobbler0.generation :
-			stats.intOldestGen;
-		stats.totalVelocityCoefficient += gobbler0.v;
-		stats.totalAttackCoefficient += gobbler0.attackCoefficient;
-		stats.totalDefenceCoefficient += gobbler0.defenceCoefficient;
-		stats.totalPhotosynthesisCoefficient += gobbler0.photosynthesisCoefficient;
+		stats.recordGobblerPropertiesForThisIteration(gobbler0);
 	}
 
 	gobblers = removeDead(gobblers);
