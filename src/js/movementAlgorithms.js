@@ -1,7 +1,5 @@
 const R = require('ramda');
 
-const calculateRadius = require('./calculateRadius.js');
-
 const calculateMaxSpeed = ({v, energy}) => v * energy / 2;
 const plusOrMinus = (x) => Math.round(Math.random()) ? x : -x;
 
@@ -15,7 +13,7 @@ const calculateEffectsOnEnergyAndAtmosphere = (gobbler, environment, xDistance, 
 
 const random = (gobbler, environment) => {
 	const speed = calculateMaxSpeed(gobbler);
-	const radius = calculateRadius(gobbler);
+	const radius = gobbler.calculateRadius();
   const xDistance = Math.random() * speed;
   const yDistance = Math.random() * speed;
 
@@ -42,7 +40,7 @@ const random = (gobbler, environment) => {
 
 const right = (gobbler, environment) => {
 	const speed = calculateMaxSpeed(gobbler);
-	const radius = calculateRadius(gobbler);
+	const radius = gobbler.calculateRadius();
   const xDistance = Math.random() * speed;
 
   gobbler.x += gobbler.x >= environment.sideLength - radius - speed ?
@@ -54,7 +52,7 @@ const right = (gobbler, environment) => {
 
 const left = (gobbler, environment) => {
 	const speed = calculateMaxSpeed(gobbler);
-	const radius = calculateRadius(gobbler);
+	const radius = gobbler.calculateRadius();
   const xDistance = Math.random() * speed;
 
   gobbler.x += gobbler.x <= radius + speed ?
@@ -66,7 +64,7 @@ const left = (gobbler, environment) => {
 
 const top = (gobbler, environment) => {
 	const speed = calculateMaxSpeed(gobbler);
-	const radius = calculateRadius(gobbler);
+	const radius = gobbler.calculateRadius();
   const yDistance = Math.random() * speed;
 
   gobbler.y += gobbler.y <= radius + speed ?
@@ -78,7 +76,7 @@ const top = (gobbler, environment) => {
 
 const bottom = (gobbler, environment) => {
 	const speed = calculateMaxSpeed(gobbler);
-	const radius = calculateRadius(gobbler);
+	const radius = gobbler.calculateRadius();
   const yDistance = Math.random() * speed;
 
   gobbler.y += gobbler.y >= environment.sideLength - radius - speed ?

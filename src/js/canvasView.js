@@ -1,6 +1,5 @@
 const R = require('ramda');
 
-const calculateRadius = require('./calculateRadius.js');
 const environment = require('./environment');
 const canvas = document.querySelector("canvas");
 const context = canvas.getContext('2d');
@@ -20,7 +19,7 @@ module.exports = {
     R.forEach((gobbler) => {
       context.fillStyle = calculateColor(gobblers.length, totalAttackCoefficient, totalDefenceCoefficient, totalPhotosynthesisCoefficient, gobbler);
       context.beginPath();
-      context.arc(gobbler.x, gobbler.y, calculateRadius(gobbler), 0, 2 * Math.PI, true);
+      context.arc(gobbler.x, gobbler.y, gobbler.calculateRadius(), 0, 2 * Math.PI, true);
       context.closePath();
       context.fill();
     }, gobblers);
