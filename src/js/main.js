@@ -6,7 +6,6 @@ const canvasView = require('./canvasView.js');
 const Gobbler = require('./Gobbler.js');
 const environment = require('./environment.js');
 const stats = require('./stats.js');
-const mutate = require('./mutate.js');
 
 var gobblers = [];
 const analysisView = AnalysisView();
