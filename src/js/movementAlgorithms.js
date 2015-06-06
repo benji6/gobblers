@@ -1,7 +1,8 @@
 const R = require('ramda');
 
+const plusOrMinus = require('./plusOrMinus.js');
+
 const calculateMaxSpeed = ({v, energy}) => v * energy / 2;
-const plusOrMinus = (x) => Math.round(Math.random()) ? x : -x;
 
 const calculateEffectsOnEnergyAndAtmosphere = (gobbler, environment, xDistance, yDistance) => {
   const totalDistance = Math.pow((Math.pow(xDistance, 2), Math.pow(yDistance, 2)), 0.5);

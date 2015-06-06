@@ -68,7 +68,7 @@ for (let i = 0; i < environment.initialGobblersCount; i++) {
 	let radius = gobblers[i].calculateRadius();
 	gobblers[i].x = Math.random() * (environment.sideLength - 2 * radius) + radius;
 	gobblers[i].y = Math.random() * (environment.sideLength - 2 * radius) + radius;
-	mutate(gobblers[i]);
+	gobblers[i].mutate();
 }
 
 (function animationloop () {

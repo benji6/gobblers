@@ -17,21 +17,21 @@ const mutateProperty = R.curry((gobbler, propertyKey) => {
   gobbler[propertyKey] = property < 0 ? 0.000001 : newProperty;
 });
 
-module.exports = (gobbler) => {
-	R.forEach(mutateProperty(gobbler), mutationCoefficientProperties);
+module.exports = function () {
+	R.forEach(mutateProperty(this), mutationCoefficientProperties);
 
-	const currentEvolutionPoints = R.sum(R.props(evolutionPointProperties, gobbler));
+	const currentEvolutionPoints = R.sum(R.props(evolutionPointProperties, this));
 	const mutationEnforcementRatio = environment.maxEvolutionPoints / currentEvolutionPoints;
 
 	currentEvolutionPoints > environment.maxEvolutionPoints &&
-		R.forEach((property) => gobbler[property] *= mutationEnforcementRatio, evolutionPointProperties);
+		R.forEach((property) => this[property] *= mutationEnforcementRatio, evolutionPointProperties);
 
-  gobbler.movementAlgorithm = Math.random() < Math.pow(gobbler.mutationCoefficient, 2) ?
+  this.movementAlgorithm = Math.random() < Math.pow(this.mutationCoefficient, 2) ?
     movementAlgorithms[Math.floor(Math.random() * movementAlgorithms.length)] :
-    gobbler.movementAlgorithm;
+    this.movementAlgorithm;
 
-  gobbler.v = gobbler.v > environment.maximumSpeed ?
-    environment.maximumSpeed : gobbler.v;
+  this.v = this.v > environment.maximumSpeed ?
+    environment.maximumSpeed : this.v;
 
-  return gobbler;
+  return this;
 };

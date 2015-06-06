@@ -1,5 +1,7 @@
 const movementAlgorithms = require('./movementAlgorithms.js');
 const mutate = require('./mutate.js');
+const plusOrMinus = require('./plusOrMinus.js');
+const environment = require('./environment.js');
 
 const calculateRadius = function () {
 	return Math.sqrt(this.energy);
@@ -17,16 +19,36 @@ const photosynthesize = function (environment) {
 	return this;
 };
 
+const calculateChildCoords = function () {
+	const separationDist = 4 * this.calculateRadius();
+	const {x, y} = this;
+	if (x <= separationDist) {
+		return {x: x + separationDist, y};
+	}
+	if (x >= environment.sideLength - separationDist) {
+		return {x: x - separationDist, y};
+	}
+	if (y <= separationDist) {
+		return {x, y: y + separationDist};
+	}
+	if (y >= environment.sideLength - separationDist) {
+		return {x, y: y - separationDist};
+	}
+	const childXSeparation = 2 * (Math.random() - 0.5) * separationDist;
+	return {
+		x: x + childXSeparation,
+		y: y + plusOrMinus(Math.pow(Math.pow(separationDist, 2) - Math.pow(childXSeparation, 2), 0.5)),
+	};
+};
+
 const reproduce = function (stats, gobblers) {
 	if (this.energy > this.threshold) {
+		const childCoords = calculateChildCoords.call(this);
 		stats.reproductionCount++;
 		this.generation++;
-		const displacementRadius = this.calculateRadius() * 2;
-		const xDisplacement = (Math.random() - 0.5) * 2 * displacementRadius;
-		const yDisplacement = Math.sqrt(Math.pow(displacementRadius,2) - Math.pow(xDisplacement,2));
-		const gobblerParams = {
-			x: this.x - xDisplacement,
-			y: this.y - yDisplacement,
+		gobblers.push(createGobbler({
+			x: childCoords.x,
+			y: childCoords.y,
 			energy: this.energy / 2,
 			v: this.v,
 			attackCoefficient: this.attackCoefficient,
@@ -34,13 +56,8 @@ const reproduce = function (stats, gobblers) {
 			generation: this.generation,
 			photosynthesisCoefficient: this.photosynthesisCoefficient,
 			movementAlgorithm: this.movementAlgorithm,
-		};
-		gobblers[gobblers.length] = createGobbler(gobblerParams);
-		this.x += xDisplacement;
-		this.y += yDisplacement;
+		}).mutate());
 		this.energy = this.energy / 2;
-		mutate(this);
-		mutate(gobblers[gobblers.length - 1]);
 		if (stats.intYoungestGen < this.generation) {
 			stats.intYoungestGen = this.generation;
 		}
@@ -66,6 +83,7 @@ const createGobbler = ({
 	metabolism: 0.001,
 	move,
 	movementAlgorithm: movementAlgorithm || movementAlgorithms[Math.floor(Math.random() * movementAlgorithms.length)],
+	mutate,
 	mutationCoefficient: 0.5,
 	photosynthesisCoefficient,
 	photosynthesize,
