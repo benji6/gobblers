@@ -1,5 +1,5 @@
 const R = require('ramda');
-const movementAlgorithms = require('./movementAlgorithms.js');
+const MovementStrategy = require('./MovementStrategy.js');
 const plusOrMinus = require('./plusOrMinus.js');
 const environment = require('./environment.js');
 
@@ -41,15 +41,14 @@ const calculateChildCoords = function () {
 
 class Gobbler {
 	constructor ({
-		energy, x, y, v, attackCoefficient, defenceCoefficient, photosynthesisCoefficient, generation, movementAlgorithm
+		energy, x, y, v, attackCoefficient, defenceCoefficient, photosynthesisCoefficient, generation, movementStrategy
 	}) {
 		this.attackCoefficient = attackCoefficient;
 		this.defenceCoefficient = defenceCoefficient;
 		this.energy = energy;
 		this.generation = generation;
 		this.metabolism = 0.001;
-		this.movementAlgorithm = movementAlgorithm ||
-			movementAlgorithms[Math.floor(Math.random() * movementAlgorithms.length)];
+		this.movementStrategy = new MovementStrategy(this, movementStrategy);
 		this.mutationCoefficient = 0.5;
 		this.photosynthesisCoefficient = photosynthesisCoefficient;
 		this.threshold = 12;
@@ -63,7 +62,7 @@ class Gobbler {
 	}
 
 	move (environment) {
-		return this.movementAlgorithm(this, environment);
+		return this.movementStrategy.move(this, environment);
 	}
 
 	mutate () {
@@ -75,9 +74,9 @@ class Gobbler {
   	currentEvolutionPoints > environment.maxEvolutionPoints &&
   		R.forEach((property) => this[property] *= mutationEnforcementRatio, evolutionPointProperties);
 
-    this.movementAlgorithm = Math.random() < Math.pow(this.mutationCoefficient, 2) ?
-      movementAlgorithms[Math.floor(Math.random() * movementAlgorithms.length)] :
-      this.movementAlgorithm;
+    this.movementStrategy = Math.random() < Math.pow(this.mutationCoefficient, 2) ?
+      new MovementStrategy(this) :
+      this.movementStrategy;
 
     this.v = this.v > environment.maximumSpeed ?
       environment.maximumSpeed : this.v;
@@ -107,7 +106,7 @@ class Gobbler {
 				defenceCoefficient: this.defenceCoefficient,
 				generation: this.generation,
 				photosynthesisCoefficient: this.photosynthesisCoefficient,
-				movementAlgorithm: this.movementAlgorithm,
+        movementStrategy: this.movementStrategy,
 			}).mutate());
 			this.energy = this.energy / 2;
 			if (stats.intYoungestGen < this.generation) {
