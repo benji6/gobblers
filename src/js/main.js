@@ -3,7 +3,7 @@ const tinytic = require('tinytic');
 
 const AnalysisView = require('./AnalysisView.jsx');
 const canvasView = require('./canvasView.js');
-const createGobbler = require('./createGobbler.js');
+const Gobbler = require('./Gobbler.js');
 const environment = require('./environment.js');
 const stats = require('./stats.js');
 const mutate = require('./mutate.js');
@@ -64,7 +64,7 @@ for (let i = 0; i < environment.initialGobblersCount; i++) {
 		generation: 0,
 		photosynthesisCoefficient: 1
 	};
-	gobblers[i] = createGobbler(gobblerParams);
+	gobblers[i] = new Gobbler(gobblerParams);
 	let radius = gobblers[i].calculateRadius();
 	gobblers[i].x = Math.random() * (environment.sideLength - 2 * radius) + radius;
 	gobblers[i].y = Math.random() * (environment.sideLength - 2 * radius) + radius;
