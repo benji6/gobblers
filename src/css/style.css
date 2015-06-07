@@ -13,7 +13,15 @@ button {
 }
 
 canvas {
+  cursor: pointer;
   margin: 0.5em 0;
+}
+
+canvas:fullscreen {
+  cursor: default;
+  height: 100vh;
+  margin: 0;
+  width: 100vh;
 }
 
 div.center {

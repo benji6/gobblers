@@ -10,6 +10,16 @@ const calculateColor = (totalGobblers, totalAttackCoefficient, totalDefenceCoeff
 
 canvas.height = canvas.width = environment.sideLength;
 
+canvas.onclick = () => {
+  if (canvas.requestFullscreen) {
+    canvas.requestFullscreen();
+  } else if (canvas.mozRequestFullScreen) {
+    canvas.mozRequestFullScreen();
+  } else if (canvas.webkitRequestFullscreen) {
+    canvas.webkitRequestFullscreen();
+  }
+};
+
 module.exports = {
   render: ({gobblers, lightLevel, totalAttackCoefficient, totalDefenceCoefficient, totalPhotosynthesisCoefficient}) => {
     context.fillStyle = `rgb(${lightLevel}, ${lightLevel}, ${lightLevel})`;
