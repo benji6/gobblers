@@ -1,5 +1,3 @@
-const R = require('ramda');
-
 const environment = require('./environment');
 const canvas = document.querySelector("canvas");
 const context = canvas.getContext('2d');
@@ -16,12 +14,12 @@ module.exports = {
   render: ({gobblers, lightLevel, totalAttackCoefficient, totalDefenceCoefficient, totalPhotosynthesisCoefficient}) => {
     context.fillStyle = `rgb(${lightLevel}, ${lightLevel}, ${lightLevel})`;
     context.fillRect(0, 0, canvas.width, canvas.height);
-    R.forEach((gobbler) => {
+    for (const gobbler of gobblers) {
       context.fillStyle = calculateColor(gobblers.length, totalAttackCoefficient, totalDefenceCoefficient, totalPhotosynthesisCoefficient, gobbler);
       context.beginPath();
       context.arc(gobbler.x, gobbler.y, gobbler.radius, 0, 2 * Math.PI, true);
       context.closePath();
       context.fill();
-    }, gobblers);
+    }
   }
 };
