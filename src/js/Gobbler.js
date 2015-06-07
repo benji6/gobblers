@@ -18,7 +18,7 @@ const mutateProperty = R.curry((gobbler, propertyKey) => {
 });
 
 const calculateChildCoords = function () {
-	const separationDist = 4 * this.calculateRadius();
+	const separationDist = 4 * this.radius;
 	const {x, y} = this;
 	if (x <= separationDist) {
 		return {x: x + separationDist, y};
@@ -57,9 +57,9 @@ class Gobbler {
 		this.y = y;
 	}
 
-	calculateRadius () {
-		return Math.sqrt(this.energy);
-	}
+  get radius () {
+    return Math.sqrt(this.energy);
+  }
 
 	move (environment) {
 		return this.movementStrategy.move(this, environment);
@@ -85,7 +85,7 @@ class Gobbler {
 	}
 
 	photosynthesize (environment) {
-		const energyProduced = this.photosynthesisCoefficient * this.calculateRadius() * environment.light() *
+		const energyProduced = this.photosynthesisCoefficient * this.radius * environment.light() *
 			environment.carbonDioxideLevel / environment.initialGobblersCount / 1000;
 			this.energy += energyProduced;
 		environment.increaseAtmosphereOxygenComposition(energyProduced);

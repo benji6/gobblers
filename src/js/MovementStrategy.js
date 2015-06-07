@@ -14,7 +14,7 @@ const calculateEffectsOnEnergyAndAtmosphere = (gobbler, environment, xDistance, 
 
 const random = (gobbler, environment) => {
 	const speed = calculateMaxSpeed(gobbler);
-	const radius = gobbler.calculateRadius();
+	const radius = gobbler.radius;
   const xDistance = Math.random() * speed;
   const yDistance = Math.random() * speed;
 
@@ -41,7 +41,7 @@ const random = (gobbler, environment) => {
 
 const right = (gobbler, environment) => {
 	const speed = calculateMaxSpeed(gobbler);
-	const radius = gobbler.calculateRadius();
+	const radius = gobbler.radius;
   const xDistance = Math.random() * speed;
 
   gobbler.x += gobbler.x >= environment.sideLength - radius - speed ?
@@ -53,7 +53,7 @@ const right = (gobbler, environment) => {
 
 const left = (gobbler, environment) => {
 	const speed = calculateMaxSpeed(gobbler);
-	const radius = gobbler.calculateRadius();
+	const radius = gobbler.radius;
   const xDistance = Math.random() * speed;
 
   gobbler.x += gobbler.x <= radius + speed ?
@@ -65,7 +65,7 @@ const left = (gobbler, environment) => {
 
 const top = (gobbler, environment) => {
 	const speed = calculateMaxSpeed(gobbler);
-	const radius = gobbler.calculateRadius();
+	const radius = gobbler.radius;
   const yDistance = Math.random() * speed;
 
   gobbler.y += gobbler.y <= radius + speed ?
@@ -77,7 +77,7 @@ const top = (gobbler, environment) => {
 
 const bottom = (gobbler, environment) => {
 	const speed = calculateMaxSpeed(gobbler);
-	const radius = gobbler.calculateRadius();
+	const radius = gobbler.radius;
   const yDistance = Math.random() * speed;
 
   gobbler.y += gobbler.y >= environment.sideLength - radius - speed ?
@@ -114,7 +114,7 @@ const edge = (gobbler, environment) => {
 
 const backAndForth = (gobbler, environment) => {
 	const speed = calculateMaxSpeed(gobbler);
-	const radius = gobbler.calculateRadius();
+	const radius = gobbler.radius;
   const xDistance = Math.random() * speed;
   const {x} = gobbler;
 
@@ -132,8 +132,8 @@ const backAndForth = (gobbler, environment) => {
 };
 
 const upAndDown = (gobbler, environment) => {
-	const speed = calculateMaxSpeed(gobbler);
-	const radius = gobbler.calculateRadius();
+  const speed = calculateMaxSpeed(gobbler);
+  const radius = gobbler.radius;
   const yDistance = Math.random() * speed;
   const {y} = gobbler;
 
@@ -163,6 +163,11 @@ class MovementStrategy {
     this.gobbler = gobbler;
     this.move = movementStrategy && movementStrategy.move ||
       movementAlgorithms[Math.floor(Math.random() * movementAlgorithms.length)];
+  }
+
+  calculateMaxSpeed () {
+    const {v, energy} = this.gobbler;
+    return v * energy / 2;
   }
 }
 

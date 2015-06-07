@@ -19,7 +19,7 @@ module.exports = {
     R.forEach((gobbler) => {
       context.fillStyle = calculateColor(gobblers.length, totalAttackCoefficient, totalDefenceCoefficient, totalPhotosynthesisCoefficient, gobbler);
       context.beginPath();
-      context.arc(gobbler.x, gobbler.y, gobbler.calculateRadius(), 0, 2 * Math.PI, true);
+      context.arc(gobbler.x, gobbler.y, gobbler.radius, 0, 2 * Math.PI, true);
       context.closePath();
       context.fill();
     }, gobblers);

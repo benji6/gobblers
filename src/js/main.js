@@ -33,9 +33,9 @@ const removeDead = R.filter((gobbler) => {
 
 const checkPossibleContactX = (gobbler0, gobbler1) => {
 	const x0 = gobbler0.x;
-	const radius0 = gobbler0.calculateRadius();
+	const radius0 = gobbler0.radius;
 	const x1 = gobbler1.x;
-	const radius1 = gobbler1.calculateRadius();
+	const radius1 = gobbler1.radius;
 
 	return x0 + radius0 >= x1 - radius1 && x0 - radius0 <= x1 + radius1;
 };
@@ -43,10 +43,10 @@ const checkPossibleContactX = (gobbler0, gobbler1) => {
 const checkContact = (gobbler0, gobbler1) => {
 	const x0 = gobbler0.x;
 	const y0 = gobbler0.y;
-	const radius0 = gobbler0.calculateRadius();
+	const radius0 = gobbler0.radius;
 	const x1 = gobbler1.x;
 	const y1 = gobbler1.y;
-	const radius1 = gobbler1.calculateRadius();
+	const radius1 = gobbler1.radius;
 
 	return Math.pow(Math.pow(x0 - x1, 2) + Math.pow(y0 - y1, 2), 0.5) <= radius0 + radius1;
 };
@@ -64,7 +64,7 @@ for (let i = 0; i < environment.initialGobblersCount; i++) {
 		photosynthesisCoefficient: 1
 	};
 	gobblers[i] = new Gobbler(gobblerParams);
-	let radius = gobblers[i].calculateRadius();
+	let radius = gobblers[i].radius;
 	gobblers[i].x = Math.random() * (environment.sideLength - 2 * radius) + radius;
 	gobblers[i].y = Math.random() * (environment.sideLength - 2 * radius) + radius;
 	gobblers[i].mutate();
