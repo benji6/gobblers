@@ -5,20 +5,27 @@ const resetValuesCalculatedEachIteration = function () {
 		this.totalVelocityCoefficient =
 		this.totalEnergy = 0;
 	this.intOldestGen = this.intYoungestGen;
+	this.movementStrategies = {};
 };
 
-const recordGobblerPropertiesForThisIteration = function (gobbler) {
-	this.totalEnergy += gobbler.energy;
-	this.intOldestGen = this.intOldestGen > gobbler.generation ?
-		gobbler.generation :
+const recordGobblerPropertiesForThisIteration = function ({
+	attackCoefficient, defenceCoefficient, energy, generation, movementStrategy, photosynthesisCoefficient, v
+}) {
+	this.totalEnergy += energy;
+	this.intOldestGen = this.intOldestGen > generation ?
+		generation :
 		this.intOldestGen;
-	this.totalVelocityCoefficient += gobbler.v;
-	this.totalAttackCoefficient += gobbler.attackCoefficient;
-	this.totalDefenceCoefficient += gobbler.defenceCoefficient;
-	this.totalPhotosynthesisCoefficient += gobbler.photosynthesisCoefficient;
+	this.totalVelocityCoefficient += v;
+	this.totalAttackCoefficient += attackCoefficient;
+	this.totalDefenceCoefficient += defenceCoefficient;
+	this.totalPhotosynthesisCoefficient += photosynthesisCoefficient;
+	this.movementStrategies[movementStrategy.movementAlgorithmName] = this.movementStrategies[movementStrategy.movementAlgorithmName] ?
+		++this.movementStrategies[movementStrategy.movementAlgorithmName] :
+		1;
 };
 
 module.exports = {
+	movementStrategies: {},
 	totalEnergy: 0,
 	eatCount: 0,
 	intYoungestGen: 0,
