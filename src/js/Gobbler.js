@@ -49,7 +49,7 @@ class Gobbler {
 		this.generation = generation;
 		this.metabolism = 0.001;
 		this.movementStrategy = new MovementStrategy(this, movementStrategy);
-		this.mutationCoefficient = 0.5;
+		this.mutationCoefficient = 0.3;
 		this.photosynthesisCoefficient = photosynthesisCoefficient;
 		this.threshold = 12;
 		this.v = v;
