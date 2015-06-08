@@ -8,11 +8,13 @@ const movementAlgorithmNames = [
   "immobile",
   "random",
   "upAndDown",
+  "wander",
 ];
 
 class MovementStrategy {
   constructor (gobbler, movementStrategy) {
     this.currentDirection = null;
+    this.phi = null;
     this.gobbler = gobbler;
     this.movementAlgorithmName = movementStrategy &&
       movementStrategy.movementAlgorithmName ||
@@ -81,7 +83,7 @@ class MovementStrategy {
     } else if (x <= radius + maxSpeed) {
       this.currentDirection = 1;
     } else {
-      this.currentDirection = this.currentDirection || 1;
+      this.currentDirection = this.currentDirection || plusOrMinus(1);
     }
 
     this.gobbler.x += xDistance * this.currentDirection;
@@ -130,11 +132,46 @@ class MovementStrategy {
     } else if (y <= radius + maxSpeed) {
       this.currentDirection = 1;
     } else {
-      this.currentDirection = this.currentDirection || 1;
+      this.currentDirection = this.currentDirection || plusOrMinus(1);
     }
 
     this.gobbler.y += yDistance * this.currentDirection;
     return this.calculateEffectsOnEnergyAndAtmosphere(environment, 0, yDistance);
+  }
+
+  wander (environment) {
+    const {maxSpeed} = this;
+    const {radius, x, y} = this.gobbler;
+    const distance = Math.random() * maxSpeed;
+    const spread = 0.1;
+
+    if (this.phi === null) {
+      this.phi = 2 * Math.PI * Math.random();
+    }
+    if (x >= environment.sideLength - radius - maxSpeed) {
+      if (Math.cos(this.phi) > 0) {
+        this.phi = Math.PI - this.phi;
+      }
+    } else if (x <= radius + maxSpeed) {
+      if (Math.cos(this.phi) < 0) {
+        this.phi = Math.PI - this.phi;
+      }
+    } else if (y >= environment.sideLength - radius - maxSpeed) {
+      if (Math.sin(this.phi) > 0) {
+        this.phi = - this.phi;
+      }
+    } else if (y <= radius + maxSpeed) {
+      if (Math.sin(this.phi) < 0) {
+        this.phi = - this.phi;
+      }
+    } else {
+      this.phi += plusOrMinus(spread);
+    }
+
+    this.gobbler.x += distance * Math.cos(this.phi);
+    this.gobbler.y += distance * Math.sin(this.phi);
+
+    return this.calculateEffectsOnEnergyAndAtmosphere(environment, distance, 0);
   }
 }
 
