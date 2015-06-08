@@ -3,11 +3,10 @@ const R = require('ramda');
 const plusOrMinus = require('./plusOrMinus.js');
 
 const movementAlgorithmNames = [
-  "backAndForth",
   "edge",
   "immobile",
   "random",
-  "upAndDown",
+  "straightLines",
   "wander",
 ];
 
@@ -73,24 +72,6 @@ class MovementStrategy {
     return this[this.movementAlgorithmName](environment);
   }
 
-  backAndForth (environment) {
-    const {maxSpeed} = this;
-    const {radius, x} = this.gobbler;
-    const xDistance = Math.random() * maxSpeed;
-
-    if (x >= environment.sideLength - radius - maxSpeed) {
-      this.currentDirection = -1;
-    } else if (x <= radius + maxSpeed) {
-      this.currentDirection = 1;
-    } else {
-      this.currentDirection = this.currentDirection || plusOrMinus(1);
-    }
-
-    this.gobbler.x += xDistance * this.currentDirection;
-
-    return this.calculateEffectsOnEnergyAndAtmosphere(environment, xDistance, 0);
-  }
-
   immobile () {
     return this.gobbler;
   }
@@ -122,21 +103,45 @@ class MovementStrategy {
     return this.calculateEffectsOnEnergyAndAtmosphere(environment, xDistance, yDistance);
   }
 
-  upAndDown (environment) {
+  straightLines (environment) {
     const {maxSpeed} = this;
-    const {radius, y} = this.gobbler;
-    const yDistance = Math.random() * maxSpeed;
+    const {radius, x, y} = this.gobbler;
+    const distance = Math.random() * maxSpeed;
+    const bounceDistance = radius + maxSpeed;
 
-    if (y >= environment.sideLength - radius - maxSpeed) {
-      this.currentDirection = -1;
-    } else if (y <= radius + maxSpeed) {
-      this.currentDirection = 1;
-    } else {
-      this.currentDirection = this.currentDirection || plusOrMinus(1);
+    if (this.currentDirection === null) {
+      this.currentDirection = {
+        x: Math.floor(3 * Math.random()) - 1,
+        y: Math.floor(3 * Math.random()) - 1,
+      };
     }
 
-    this.gobbler.y += yDistance * this.currentDirection;
-    return this.calculateEffectsOnEnergyAndAtmosphere(environment, 0, yDistance);
+    if (this.currentDirection.y) {
+      if (y + bounceDistance >= environment.sideLength) {
+        this.currentDirection.y = -1;
+      } else if (y <= bounceDistance) {
+        this.currentDirection.y = 1;
+      }
+    }
+
+    if (this.currentDirection.x) {
+      if (x + bounceDistance >= environment.sideLength) {
+        this.currentDirection.x = -1;
+      } else if (x <= bounceDistance) {
+        this.currentDirection.x = 1;
+      }
+    }
+
+    if (this.currentDirection.x && this.currentDirection.y) {
+      const axisDistance = Math.pow(distance, 0.5) / 2;
+      this.gobbler.x += axisDistance * this.currentDirection.x;
+      this.gobbler.y += axisDistance * this.currentDirection.y;
+    } else {
+      this.gobbler.x += distance * this.currentDirection.x;
+      this.gobbler.y += distance * this.currentDirection.y;
+    }
+
+    return this.calculateEffectsOnEnergyAndAtmosphere(environment, 0, distance);
   }
 
   wander (environment) {
