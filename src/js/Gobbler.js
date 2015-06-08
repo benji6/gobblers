@@ -62,7 +62,7 @@ class Gobbler {
   }
 
 	move (environment) {
-		return this.movementStrategy.move(this, environment);
+		return this.movementStrategy.move(environment);
 	}
 
 	mutate () {
