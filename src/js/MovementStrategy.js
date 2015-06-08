@@ -25,9 +25,8 @@ class MovementStrategy {
     return v * energy / 2;
   }
 
-  calculateEffectsOnEnergyAndAtmosphere (environment, xDistance, yDistance) {
-    const totalDistance = Math.pow((Math.pow(xDistance, 2), Math.pow(yDistance, 2)), 0.5);
-    const energyUsed = totalDistance / environment.sideLength;
+  calculateEffectsOnEnergyAndAtmosphere (environment, distance) {
+    const energyUsed = distance / environment.sideLength;
     this.gobbler.energy -= energyUsed;
     environment.increaseAtmosphereOxygenComposition(-energyUsed);
     return this.gobbler;
@@ -65,7 +64,7 @@ class MovementStrategy {
       },
     ]).fn();
 
-    return this.calculateEffectsOnEnergyAndAtmosphere(environment, distance, 0);
+    return this.calculateEffectsOnEnergyAndAtmosphere(environment, distance);
   }
 
   move (environment) {
@@ -79,8 +78,9 @@ class MovementStrategy {
   random (environment) {
     const {maxSpeed} = this;
     const {radius, x, y} = this.gobbler;
-    const xDistance = Math.random() * maxSpeed;
-    const yDistance = Math.random() * maxSpeed;
+    const distance = Math.random() * maxSpeed;
+    const xDistance = Math.random() * distance;
+    const yDistance = Math.pow(Math.pow(distance, 2) - Math.pow(xDistance, 2), 0.5);
 
   	if (x <= radius + maxSpeed) {
   		this.gobbler.x += xDistance;
@@ -100,7 +100,7 @@ class MovementStrategy {
   		}
   	}
 
-    return this.calculateEffectsOnEnergyAndAtmosphere(environment, xDistance, yDistance);
+    return this.calculateEffectsOnEnergyAndAtmosphere(environment, distance);
   }
 
   straightLines (environment) {
@@ -141,7 +141,7 @@ class MovementStrategy {
       this.gobbler.y += distance * this.currentDirection.y;
     }
 
-    return this.calculateEffectsOnEnergyAndAtmosphere(environment, 0, distance);
+    return this.calculateEffectsOnEnergyAndAtmosphere(environment, distance);
   }
 
   wander (environment) {
@@ -176,7 +176,7 @@ class MovementStrategy {
     this.gobbler.x += distance * Math.cos(this.phi);
     this.gobbler.y += distance * Math.sin(this.phi);
 
-    return this.calculateEffectsOnEnergyAndAtmosphere(environment, distance, 0);
+    return this.calculateEffectsOnEnergyAndAtmosphere(environment, distance);
   }
 }
 
