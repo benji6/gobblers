@@ -1,6 +1,4 @@
-const R = require('ramda');
-
-const calculateRadius = require('./calculateRadius.js');
+const environment = require('./environment');
 const canvas = document.querySelector("canvas");
 const context = canvas.getContext('2d');
 
@@ -10,22 +8,28 @@ const calculateColor = (totalGobblers, totalAttackCoefficient, totalDefenceCoeff
     ${(defenceCoefficient / totalDefenceCoefficient * totalGobblers * 127).toFixed(0)},
     ${(photosynthesisCoefficient / totalPhotosynthesisCoefficient * totalGobblers * 127).toFixed(0)})`;
 
-canvas.width = window.innerHeight > window.innerWidth ?
-  window.innerWidth :
-  window.innerHeight;
-canvas.height = canvas.width;
+canvas.height = canvas.width = environment.sideLength;
+
+canvas.onclick = () => {
+  if (canvas.requestFullscreen) {
+    canvas.requestFullscreen();
+  } else if (canvas.mozRequestFullScreen) {
+    canvas.mozRequestFullScreen();
+  } else if (canvas.webkitRequestFullscreen) {
+    canvas.webkitRequestFullscreen();
+  }
+};
 
 module.exports = {
-  canvas,
-  render: function ({gobblers, lightLevel, totalAttackCoefficient, totalDefenceCoefficient, totalPhotosynthesisCoefficient}) {
+  render: ({gobblers, lightLevel, totalAttackCoefficient, totalDefenceCoefficient, totalPhotosynthesisCoefficient}) => {
     context.fillStyle = `rgb(${lightLevel}, ${lightLevel}, ${lightLevel})`;
     context.fillRect(0, 0, canvas.width, canvas.height);
-    R.forEach((gobbler) => {
+    for (const gobbler of gobblers) {
       context.fillStyle = calculateColor(gobblers.length, totalAttackCoefficient, totalDefenceCoefficient, totalPhotosynthesisCoefficient, gobbler);
       context.beginPath();
-      context.arc(gobbler.x, gobbler.y, calculateRadius(gobbler), 0, 2 * Math.PI, true);
+      context.arc(gobbler.x, gobbler.y, gobbler.radius, 0, 2 * Math.PI, true);
       context.closePath();
       context.fill();
-    }, gobblers);
+    }
   }
 };

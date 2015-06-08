@@ -2,28 +2,16 @@ const R = require('ramda');
 const tinytic = require('tinytic');
 
 const AnalysisView = require('./AnalysisView.jsx');
-const calculateRadius = require('./calculateRadius.js');
 const canvasView = require('./canvasView.js');
-const createGobbler = require('./createGobbler.js');
+const Gobbler = require('./Gobbler.js');
 const environment = require('./environment.js');
 const stats = require('./stats.js');
-
-const movementAlgorithms = require('./movementAlgorithms.js');
-const move = movementAlgorithms[0];
 
 var gobblers = [];
 const analysisView = AnalysisView();
 
 const calculateAttackStrength = ({attackCoefficient, energy}) => attackCoefficient * energy;
 const calculateDefenceStrength = ({defenceCoefficient, energy}) => defenceCoefficient * energy;
-
-const photosynthesize = (gobbler, environment) => {
-	const energyProduced = gobbler.photosynthesisCoefficient * calculateRadius(gobbler) * environment.light() *
-		environment.carbonDioxideLevel / environment.initialGobblersCount / 1000;
-	gobbler.energy += energyProduced;
-	environment.increaseAtmosphereOxygenComposition(energyProduced);
-	return gobbler;
-};
 
 const attack = (gobbler0, gobbler1, stats) => {
 	if (calculateAttackStrength(gobbler0) >= calculateDefenceStrength(gobbler1)) {
@@ -32,68 +20,6 @@ const attack = (gobbler0, gobbler1, stats) => {
 		gobbler1.energy = 0;
 	}
 	return gobbler0;
-};
-
-const respire = (gobbler, environment) => {
-	const energyUsed = gobbler.energy * gobbler.metabolism;
-
-	gobbler.energy -= energyUsed;
-	environment.increaseAtmosphereOxygenComposition(-energyUsed);
-
-	return gobbler;
-};
-
-const reproduce = (gobbler, stats) => {
-	if (gobbler.energy > gobbler.threshold) {
-		stats.reproductionCount++;
-		gobbler.generation++;
-		const displacementRadius = calculateRadius(gobbler) * 2;
-		const xDisplacement = (Math.random() - 0.5) * 2 * displacementRadius;
-		const yDisplacement = Math.sqrt(Math.pow(displacementRadius,2) - Math.pow(xDisplacement,2));
-		const gobblerParams = {
-			x: gobbler.x - xDisplacement,
-			y: gobbler.y - yDisplacement,
-			energy: gobbler.energy / 2,
-			v: gobbler.v,
-			attackCoefficient: gobbler.attackCoefficient,
-			defenceCoefficient: gobbler.defenceCoefficient,
-			generation: gobbler.generation,
-			photosynthesisCoefficient: gobbler.photosynthesisCoefficient
-		};
-		gobblers[gobblers.length] = createGobbler(gobblerParams);
-		gobbler.x += xDisplacement;
-		gobbler.y += yDisplacement;
-		gobbler.energy = gobbler.energy / 2;
-		mutate(gobbler);
-		mutate(gobblers[gobblers.length - 1]);
-		if (stats.intYoungestGen < gobbler.generation) {
-			stats.intYoungestGen = gobbler.generation;
-		}
-	}
-	return gobbler;
-};
-
-const mutate = (gobbler) => {
-	const mutateProp = (prop) => {
-		prop += prop * (Math.random() - 0.5) * gobbler.mutationCoefficient;
-		if (prop < 0) {
-			prop = 0.000001;
-		}
-		return prop;
-	};
-	gobbler.v = mutateProp(gobbler.v);
-	gobbler.attackCoefficient = mutateProp(gobbler.attackCoefficient);
-	gobbler.defenceCoefficient = mutateProp(gobbler.defenceCoefficient);
-	gobbler.photosynthesisCoefficient = mutateProp(gobbler.photosynthesisCoefficient);
-	//enforce restrictions
-	var currentEvolutionPoints = gobbler.v + gobbler.attackCoefficient + gobbler.defenceCoefficient + gobbler.photosynthesisCoefficient;
-	var mutationEnforcementRatio = environment.maxEvolutionPoints / currentEvolutionPoints;
-	if (currentEvolutionPoints > environment.maxEvolutionPoints) {
-		gobbler.v = gobbler.v * mutationEnforcementRatio;
-		gobbler.attackCoefficient = gobbler.attackCoefficient * mutationEnforcementRatio;
-		gobbler.defenceCoefficient = gobbler.defenceCoefficient * mutationEnforcementRatio;
-		gobbler.photosynthesisCoefficient = gobbler.photosynthesisCoefficient * mutationEnforcementRatio;
-	}
 };
 
 const removeDead = R.filter((gobbler) => {
@@ -107,9 +33,9 @@ const removeDead = R.filter((gobbler) => {
 
 const checkPossibleContactX = (gobbler0, gobbler1) => {
 	const x0 = gobbler0.x;
-	const radius0 = calculateRadius(gobbler0);
+	const radius0 = gobbler0.radius;
 	const x1 = gobbler1.x;
-	const radius1 = calculateRadius(gobbler1);
+	const radius1 = gobbler1.radius;
 
 	return x0 + radius0 >= x1 - radius1 && x0 - radius0 <= x1 + radius1;
 };
@@ -117,10 +43,10 @@ const checkPossibleContactX = (gobbler0, gobbler1) => {
 const checkContact = (gobbler0, gobbler1) => {
 	const x0 = gobbler0.x;
 	const y0 = gobbler0.y;
-	const radius0 = calculateRadius(gobbler0);
+	const radius0 = gobbler0.radius;
 	const x1 = gobbler1.x;
 	const y1 = gobbler1.y;
-	const radius1 = calculateRadius(gobbler1);
+	const radius1 = gobbler1.radius;
 
 	return Math.pow(Math.pow(x0 - x1, 2) + Math.pow(y0 - y1, 2), 0.5) <= radius0 + radius1;
 };
@@ -137,21 +63,17 @@ for (let i = 0; i < environment.initialGobblersCount; i++) {
 		generation: 0,
 		photosynthesisCoefficient: 1
 	};
-	gobblers[i] = createGobbler(gobblerParams);
-	let radius = calculateRadius(gobblers[i]);
-	gobblers[i].x = Math.random()*(canvasView.canvas.width-2* radius) + radius;
-	gobblers[i].y = Math.random()*(canvasView.canvas.height-2* radius) + radius;
-	mutate(gobblers[i]);
+	gobblers[i] = new Gobbler(gobblerParams);
+	let radius = gobblers[i].radius;
+	gobblers[i].x = Math.random() * (environment.sideLength - 2 * radius) + radius;
+	gobblers[i].y = Math.random() * (environment.sideLength - 2 * radius) + radius;
+	gobblers[i].mutate();
 }
 
 (function animationloop () {
 	window.requestAnimationFrame(animationloop);
-	stats.totalEnergy = 0;
-	stats.intOldestGen = stats.intYoungestGen;
-	stats.totalVelocityCoefficient = 0;
-	stats.totalPhotosynthesisCoefficient = 0;
-	stats.totalAttackCoefficient = 0;
-	stats.totalDefenceCoefficient = 0;
+
+	stats.resetValuesCalculatedEachIteration();
 
 	gobblers = R.sort((gobbler0, gobbler1) => gobbler0.x - gobbler1.x, gobblers);
 
@@ -175,16 +97,13 @@ for (let i = 0; i < environment.initialGobblersCount; i++) {
 			j++;
 		}
 
-		respire(reproduce(move(photosynthesize(gobbler0, environment), environment), stats), environment);
+		gobbler0
+			.photosynthesize(environment)
+			.move(environment)
+			.reproduce(stats, gobblers)
+			.respire(environment);
 
-		stats.totalEnergy += gobbler0.energy;
-		stats.intOldestGen = stats.intOldestGen > gobbler0.generation ?
-			gobbler0.generation :
-			stats.intOldestGen;
-		stats.totalVelocityCoefficient += gobbler0.v;
-		stats.totalAttackCoefficient += gobbler0.attackCoefficient;
-		stats.totalDefenceCoefficient += gobbler0.defenceCoefficient;
-		stats.totalPhotosynthesisCoefficient += gobbler0.photosynthesisCoefficient;
+		stats.recordGobblerPropertiesForThisIteration(gobbler0);
 	}
 
 	gobblers = removeDead(gobblers);

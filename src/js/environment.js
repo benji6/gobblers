@@ -1,7 +1,9 @@
 const canvasView = require('./canvasView.js');
 
-const initialGobblersCount = (canvasView.canvas.height > canvasView.canvas.width ?
-	canvasView.canvas.width : canvasView.canvas.height) * 2 / 3;
+const sideLength = window.innerHeight > window.innerWidth ?
+	window.innerWidth :
+	window.innerHeight;
+const initialGobblersCount = sideLength;
 const initialGobblerEnergy = 6;
 
 const oxygenLevel = initialGobblersCount * initialGobblerEnergy;
@@ -9,13 +11,17 @@ const carbonDioxideLevel = oxygenLevel;
 
 module.exports = {
 	carbonDioxideLevel,
-	initialGobblerEnergy,
-	initialGobblersCount,
-	light: () => (Math.sin(Date.now() / 10000) + 1) / 2,
 	increaseAtmosphereOxygenComposition: function (amount) {
 		this.oxygenLevel += amount;
 		this.carbonDioxideLevel -= amount;
 	},
+	initialGobblerEnergy,
+	initialGobblersCount,
+	light: () => (Math.sin(Date.now() / 10000) + 1) / 2,
+	maximumSpeed: 3,
 	oxygenLevel,
 	maxEvolutionPoints: 8,
+	sideLength: window.innerHeight > window.innerWidth ?
+	  window.innerWidth :
+	  window.innerHeight,
 };
