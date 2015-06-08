@@ -36,34 +36,36 @@ class MovementStrategy {
     const {radius, x, y} = this.gobbler;
     const {maxSpeed} = this;
     const distance = Math.random() * maxSpeed;
+    const bounceDistance = radius + maxSpeed;
 
     R.minBy((obj) => obj.dist, [
       {
         dist: x,
-        fn: () => this.gobbler.x += x <= radius + maxSpeed ?
-          distance :
+        fn: () => this.gobbler.x += x <= bounceDistance ?
+          0 :
           -distance,
       },
       {
         dist: environment.sideLength - x,
-        fn: () => this.gobbler.x += x >= environment.sideLength - radius - maxSpeed ?
-          -distance :
+        fn: () => this.gobbler.x += x >= environment.sideLength - bounceDistance ?
+          0 :
           distance,
       },
       {
         dist: y,
-        fn: () => this.gobbler.y += y <= radius + maxSpeed ?
-          distance :
+        fn: () => this.gobbler.y += y <= bounceDistance ?
+          0 :
           -distance,
       },
       {
         dist: environment.sideLength - y,
-        fn: () => this.gobbler.y += y >= environment.sideLength - radius - maxSpeed ?
-          -distance :
+        fn: () => this.gobbler.y += y >= environment.sideLength - bounceDistance ?
+          0 :
           distance,
       },
     ]).fn();
 
+    //NB there is still a cost even if the gobbler does not move
     return this.calculateEffectsOnEnergyAndAtmosphere(environment, distance);
   }
 
