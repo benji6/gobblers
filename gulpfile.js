@@ -71,6 +71,11 @@ gulp.task('manifest', function () {
       hash: true,
       filename: 'app.manifest',
       exclude: 'app.manifest',
+      cache: [
+        "http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css",
+        "http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css",
+        "http://cdnjs.cloudflare.com/ajax/libs/react/0.13.3/react.min.js",
+      ],
      }))
     .pipe(gulp.dest(buildDestinationPath));
 });

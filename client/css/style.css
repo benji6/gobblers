@@ -3,13 +3,6 @@
 body {
   background-color: var(--pale-gray);
   color: var(--black);
-  font-family: sans-serif;
-  margin: 0;
-}
-
-button {
-  margin: 1em;
-  width: 12em;
 }
 
 canvas {
@@ -18,7 +11,7 @@ canvas {
 }
 
 canvas:fullscreen {
-  cursor: default;
+  cursor: none;
   height: 100vh;
   margin: 0;
   width: 100vh;
@@ -43,7 +36,7 @@ section {
 }
 
 table {
-  border-radius: 1em;
+  border-radius: 0.5rem;
   box-shadow: 0 0 0.3em 0.3em var(--gray);
   margin: 2em auto;
   padding: 0.5em;

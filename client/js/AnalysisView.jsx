@@ -1,5 +1,3 @@
-import React from 'react';
-
 export default () => {
   const View = React.createClass({
   render: function () {
@@ -26,7 +24,7 @@ export default () => {
       } = environment;
 
       return <div>
-        <table>
+        <table className="table-condensed">
           <thead>
             <tr>
               <th>High-Level Analysis</th>

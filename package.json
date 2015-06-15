@@ -47,7 +47,6 @@
     "directories": {},
     "dependencies": {
       "ramda": "npm:ramda@^0.15.0",
-      "react": "npm:react@^0.14.0-alpha3",
       "tinytic": "npm:tinytic@^1.4.0"
     },
     "devDependencies": {
