@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" manifest="app.manifest">
+  <head>
+    <meta charset="utf-8">
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <title>Gobblers</title>
+    <script>
+      window.applicationCache.addEventListener("updateready", function () {
+        window.applicationCache.status === window.applicationCache.UPDATEREADY &&
+          window.location.reload();
+      });
+    </script>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <!--[if lte IE 8]>
+      <style>
+        .browsehappy {
+          margin: 0.2em 0;
+          background: #ccc;
+          color: #000;
+          padding: 0.2em 0;
+          text-align: center;
+        }
+      </style>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+    <header>
+      <h1 class="text-center">Gobblers Evolution Simulator</h1>
+    </header>
+    <section>
+      <h2>About</h2>
+      <p>
+        Below is an evolution simulator.
+        The canvas is populated with objects called gobblers.
+        Gobblers require energy to survive and can get energy by photosynthesizing or eating other gobblers.
+        The environment has a light level and oxygen and carbon dioxide levels.
+        The gobblers have a number of parameters which influence their behaviour and which can mutate with each successive generation.
+      </p>
+      <h3>Key</h3>
+      <p>The environment light level is visualized by the background color of the canvas.</p>
+      <p>The more red a gobbler is the more it leans towards attacking.</p>
+      <p>The more blue a gobbler is the more it leans towards defence.</p>
+      <p>The more green a gobbler is the more it leans towards photosynthesizing.</p>
+    </section>
+    <div id="stats_container"></div>
+    <canvas class="center-block"></canvas>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/react/0.13.3/react.min.js"></script>
+    <script src="/jspm_packages/system.js"></script>
+    <script src="/config.js"></script>
+		<script>
+		  System.import("dist/js/main");
+		</script>
+  </body>
+</html>

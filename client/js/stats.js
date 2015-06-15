@@ -24,7 +24,7 @@ const recordGobblerPropertiesForThisIteration = function ({
 		1;
 };
 
-module.exports = {
+export default {
 	movementStrategies: {},
 	totalEnergy: 0,
 	eatCount: 0,

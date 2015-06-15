@@ -1,4 +1,5 @@
-const environment = require('./environment');
+import environment from './environment';
+
 const canvas = document.querySelector("canvas");
 const context = canvas.getContext('2d');
 
@@ -20,7 +21,7 @@ canvas.onclick = () => {
   }
 };
 
-module.exports = {
+export default {
   render: ({gobblers, lightLevel, totalAttackCoefficient, totalDefenceCoefficient, totalPhotosynthesisCoefficient}) => {
     context.fillStyle = `rgb(${lightLevel}, ${lightLevel}, ${lightLevel})`;
     context.fillRect(0, 0, canvas.width, canvas.height);

@@ -1,7 +1,7 @@
-const R = require('ramda');
-const MovementStrategy = require('./MovementStrategy.js');
-const plusOrMinus = require('./plusOrMinus.js');
-const environment = require('./environment.js');
+import R from 'ramda';
+import MovementStrategy from './MovementStrategy';
+import plusOrMinus from './plusOrMinus';
+import environment from './environment';
 
 const mutationCoefficientProperties = [
   "v", "attackCoefficient", "defenceCoefficient", "photosynthesisCoefficient",
@@ -124,4 +124,4 @@ class Gobbler {
 	}
 }
 
-module.exports = Gobbler;
+export default Gobbler;

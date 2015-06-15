@@ -1,0 +1,40 @@
+@import "vars";
+
+canvas {
+  cursor: pointer;
+  margin: 0.5em 0;
+}
+
+canvas:fullscreen {
+  cursor: none;
+  height: 100vh;
+  margin: 0;
+  width: 100vh;
+}
+
+h1 {
+  margin: 0;
+  padding: 1em;
+}
+
+header {
+  background: color(var(--pale-gray) shade(5%));
+}
+
+section {
+  margin: 0 1rem;
+}
+
+table {
+  border-radius: 0.5rem;
+  box-shadow: 0 0 0.3em 0.3em var(--gray);
+  margin: 2rem auto;
+}
+
+td, th {
+  padding: 0.1em 0.5em;
+}
+
+.hidden {
+  display: none;
+}

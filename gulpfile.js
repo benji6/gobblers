@@ -1,82 +1,101 @@
-const babelify = require('babelify');
-const buffer = require('vinyl-buffer');
-const browserify = require('browserify');
+const babel = require('gulp-babel');
 const cssnext = require('cssnext');
 const csswring = require('csswring');
+const del = require('del');
 const connect = require('gulp-connect');
 const gulp = require('gulp');
-const gutil = require('gulp-util');
+const manifest = require('gulp-manifest');
 const minifyHTML = require('gulp-minify-html');
 const plumber = require('gulp-plumber');
 const postcss = require('gulp-postcss');
-const R = require('ramda');
-const reactify = require('reactify');
-const source = require('vinyl-source-stream');
+const react = require('gulp-react');
+const runSequence = require('run-sequence');
 const sourcemaps = require('gulp-sourcemaps');
 const uglify = require('gulp-uglify');
-const watchify = require('watchify');
 
-const htmlPath = "src/html/index.html";
-const jsPath = "src/js/main.js";
-const distPath = "dist";
+const buildDestinationPath = 'dist';
 
-gulp.task("connect", function () {
-  connect.server({livereload: true});
+gulp.task('connect', function () {
+  return connect.server({livereload: true});
 });
 
-gulp.task("reload", function () {
-  gulp.src(distPath).pipe(connect.reload());
+gulp.task('clean', function () {
+  return del([
+    buildDestinationPath + '/**/*.map',
+  ]);
 });
 
-gulp.task("html", function () {
-  gulp.src(htmlPath)
+gulp.task('reload', function () {
+  return gulp.src(buildDestinationPath).pipe(connect.reload());
+});
+
+gulp.task('html', function () {
+  return gulp.src('client/html/index.html')
     .pipe(minifyHTML())
-    .pipe(gulp.dest(distPath));
+    .pipe(gulp.dest(buildDestinationPath));
 });
 
-gulp.task("jsDev", function () {
-  watchify(browserify(jsPath, R.assoc("debug", true, watchify.args)))
-    .transform(reactify)
-    .transform(babelify)
-    .bundle()
-    .on('error', gutil.log.bind(gutil, 'Browserify Error'))
-    .pipe(source("bundle.js"))
+gulp.task('jsDev', function () {
+  return gulp.src('client/js/**/*.js*')
     .pipe(plumber())
-    .pipe(buffer())
-    .pipe(sourcemaps.init({loadMaps: true}))
-    .pipe(sourcemaps.write('./'))
-    .pipe(gulp.dest("dist"));
+    .pipe(sourcemaps.init())
+    .pipe(babel())
+    .pipe(react())
+    .pipe(uglify())
+    .pipe(sourcemaps.write())
+    .pipe(gulp.dest(buildDestinationPath + '/js'));
 });
 
-gulp.task("jsProd", function () {
-  browserify({entries: jsPath})
-    .transform(reactify)
-    .transform(babelify)
-    .bundle()
-    .on('error', gutil.log.bind(gutil, 'Browserify Error'))
-    .pipe(source("bundle.js"))
-    .pipe(buffer())
+gulp.task('jsProd', function () {
+  return gulp.src('client/js/**/*.js*')
+    .pipe(babel())
+    .pipe(react())
     .pipe(uglify())
-    .pipe(gulp.dest("dist"));
+    .pipe(gulp.dest(buildDestinationPath + '/js'));
 });
 
 gulp.task('css', function () {
-  return gulp.src("src/css/style.css")
+  return gulp.src('client/css/style.css')
     .pipe(plumber())
     .pipe(postcss([
       cssnext(),
       csswring
     ]))
-    .pipe(gulp.dest("dist"));
+    .pipe(gulp.dest('dist'));
 });
 
-gulp.task("watch", function () {
-  gulp.start("jsDev", "css", "html", "connect");
-  gulp.watch("src/js/**/*.js*", ["jsDev"]);
-  gulp.watch(htmlPath, ["html"]);
-  gulp.watch("src/css/**/*.css", ["css"]);
-  gulp.watch(distPath + "/*", ["reload"]);
+gulp.task('manifest', function () {
+  return gulp.src(buildDestinationPath + '/**/*')
+    .pipe(plumber())
+    .pipe(manifest({
+      hash: true,
+      filename: 'app.manifest',
+      exclude: 'app.manifest',
+      cache: [
+        "http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css",
+        "http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css",
+        "http://cdnjs.cloudflare.com/ajax/libs/react/0.13.3/react.min.js",
+      ],
+     }))
+    .pipe(gulp.dest(buildDestinationPath));
 });
 
-gulp.task("build", ["jsProd", "css", "html"]);
-gulp.task("default", ["watch"]);
+gulp.task('watch', function () {
+  gulp.watch('client/html/**/*.html', function () {
+    return runSequence(['html'], 'manifest', 'reload');
+  });
+  gulp.watch('client/js/**/*.js*', function () {
+    return runSequence(['jsDev'], 'manifest', 'reload');
+  });
+  gulp.watch('client/css/**/*.css', function () {
+    return runSequence(['css'], 'manifest', 'reload');
+  });
+});
+
+gulp.task('build', function () {
+  return runSequence(['clean', 'html', 'jsProd', 'css'], 'manifest');
+});
+
+gulp.task('default', function () {
+  return runSequence(['watch', 'html', 'jsDev', 'css'], 'manifest', 'connect');
+});

@@ -1,6 +1,5 @@
-const R = require('ramda');
-
-const plusOrMinus = require('./plusOrMinus.js');
+import R from 'ramda';
+import plusOrMinus from './plusOrMinus';
 
 const movementAlgorithmNames = [
   "edge",
@@ -182,4 +181,4 @@ class MovementStrategy {
   }
 }
 
-module.exports = MovementStrategy;
+export default MovementStrategy;
