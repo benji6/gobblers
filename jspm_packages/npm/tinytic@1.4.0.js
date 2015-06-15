@@ -1,0 +1,1 @@
+module.exports = require("npm:tinytic@1.4.0/tinytic");

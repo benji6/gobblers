@@ -1,0 +1,38 @@
+{
+  "name": "tinytic",
+  "version": "1.4.0",
+  "description": "module for getting time differences, especially useful for animation",
+  "main": "tinytic.js",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:benji6/tinytic.git"
+  },
+  "keywords": [
+    "animation",
+    "difference",
+    "elapsed",
+    "requestAnimationFrame",
+    "stopwatch",
+    "tic",
+    "tick",
+    "time",
+    "timediff",
+    "tinytic",
+    "toc"
+  ],
+  "author": "Ben Hall (http://benji6.uk)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/benji6/tinytic/issues"
+  },
+  "homepage": "https://github.com/benji6/tinytic",
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "gulp-plumber": "^1.0.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-uglify": "^1.2.0"
+  },
+  "jshintConfig": {
+    "esnext": true
+  }
+}

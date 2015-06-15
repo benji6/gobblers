@@ -1,0 +1,68 @@
+{
+  "name": "tinytic",
+  "version": "1.4.0",
+  "description": "module for getting time differences, especially useful for animation",
+  "main": "tinytic.js",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:benji6/tinytic.git"
+  },
+  "keywords": [
+    "animation",
+    "difference",
+    "elapsed",
+    "requestAnimationFrame",
+    "stopwatch",
+    "tic",
+    "tick",
+    "time",
+    "timediff",
+    "tinytic",
+    "toc"
+  ],
+  "author": {
+    "name": "Ben Hall",
+    "url": "http://benji6.uk"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/benji6/tinytic/issues"
+  },
+  "homepage": "https://github.com/benji6/tinytic",
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "gulp-plumber": "^1.0.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-uglify": "^1.2.0"
+  },
+  "jshintConfig": {
+    "esnext": true
+  },
+  "gitHead": "75ff69742db062c4d896cf7fcbd8bf14c5c2d65c",
+  "_id": "tinytic@1.4.0",
+  "scripts": {},
+  "_shasum": "f10ad0077482e5c3467dd9921544a4362b03b59b",
+  "_from": ".",
+  "_npmVersion": "2.5.1",
+  "_nodeVersion": "0.12.0",
+  "_npmUser": {
+    "name": "benji6",
+    "email": "benhall22@hotmail.co.uk"
+  },
+  "maintainers": [
+    {
+      "name": "benji6",
+      "email": "benhall22@hotmail.co.uk"
+    }
+  ],
+  "dist": {
+    "shasum": "f10ad0077482e5c3467dd9921544a4362b03b59b",
+    "tarball": "http://registry.npmjs.org/tinytic/-/tinytic-1.4.0.tgz"
+  },
+  "format": "cjs",
+  "ignore": [
+    "node_modules"
+  ],
+  "registry": "npm",
+  "dependencies": {}
+}

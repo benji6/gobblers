@@ -1,0 +1,1 @@
+"use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports["default"]=function(e){return Math.round(Math.random())?e:-e},module.exports=exports["default"];
