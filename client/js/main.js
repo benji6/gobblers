@@ -1,11 +1,11 @@
-const R = require('ramda');
-const tinytic = require('tinytic');
+import R from 'ramda';
+import tinytic from 'tinytic';
 
-const AnalysisView = require('./AnalysisView.jsx');
-const canvasView = require('./canvasView.js');
-const Gobbler = require('./Gobbler.js');
-const environment = require('./environment.js');
-const stats = require('./stats.js');
+import AnalysisView from './AnalysisView';
+import canvasView from './canvasView';
+import Gobbler from './Gobbler';
+import environment from './environment';
+import stats from './stats';
 
 var gobblers = [];
 const analysisView = AnalysisView();

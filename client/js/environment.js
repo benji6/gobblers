@@ -1,4 +1,4 @@
-const canvasView = require('./canvasView.js');
+import canvasView from './canvasView';
 
 const sideLength = window.innerHeight > window.innerWidth ?
 	window.innerWidth :
@@ -9,7 +9,7 @@ const initialGobblerEnergy = 6;
 const oxygenLevel = initialGobblersCount * initialGobblerEnergy;
 const carbonDioxideLevel = oxygenLevel;
 
-module.exports = {
+export default {
 	carbonDioxideLevel,
 	increaseAtmosphereOxygenComposition: function (amount) {
 		this.oxygenLevel += amount;

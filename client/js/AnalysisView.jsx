@@ -1,6 +1,6 @@
-const React = require('react');
+import React from 'react';
 
-module.exports = () => {
+export default () => {
   const View = React.createClass({
   render: function () {
       const {
