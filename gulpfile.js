@@ -75,6 +75,10 @@ gulp.task('manifest', function () {
         "http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css",
         "http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css",
         "http://cdnjs.cloudflare.com/ajax/libs/react/0.13.3/react.min.js",
+        "http://cdnjs.cloudflare.com/ajax/libs/ramda/0.14.0/ramda.min.js",
+        "../jspm_packages/es6-module-loader.js",
+        "../jspm_packages/system.js",
+        "../config.js",
       ],
      }))
     .pipe(gulp.dest(buildDestinationPath));

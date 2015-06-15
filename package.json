@@ -38,15 +38,9 @@
     "esnext": "true",
     "expr": "true"
   },
-  "dependencies": {
-    "ramda": "^0.14.0",
-    "react": "^0.13.3",
-    "tinytic": "^1.3.2"
-  },
   "jspm": {
     "directories": {},
     "dependencies": {
-      "ramda": "npm:ramda@^0.15.0",
       "tinytic": "npm:tinytic@^1.4.0"
     },
     "devDependencies": {

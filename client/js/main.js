@@ -1,4 +1,3 @@
-import R from 'ramda';
 import tinytic from 'tinytic';
 
 import AnalysisView from './AnalysisView';

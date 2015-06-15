@@ -1,4 +1,3 @@
-import R from 'ramda';
 import MovementStrategy from './MovementStrategy';
 import plusOrMinus from './plusOrMinus';
 import environment from './environment';

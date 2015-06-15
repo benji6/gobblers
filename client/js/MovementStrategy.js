@@ -1,4 +1,3 @@
-import R from 'ramda';
 import plusOrMinus from './plusOrMinus';
 
 const movementAlgorithmNames = [
