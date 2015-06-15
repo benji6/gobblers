@@ -1,5 +1,5 @@
 System.config({
-  "baseURL": "/",
+  "baseURL": "/gobblers",
   "transpiler": "babel",
   "babelOptions": {
     "optional": [
@@ -32,4 +32,3 @@ System.config({
     }
   }
 });
-
