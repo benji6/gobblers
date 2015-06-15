@@ -17,10 +17,6 @@ h1 {
   padding: 1em;
 }
 
-header {
-  background: color(var(--pale-gray) shade(5%));
-}
-
 section {
   margin: 0 1rem;
 }
