@@ -1,3 +1,5 @@
+const capitalizeFirst = (str) => str[0].toUpperCase() + str.slice(1);
+
 export default () => {
   const View = React.createClass({
   render: function () {
@@ -25,12 +27,11 @@ export default () => {
 
       return <div className="container-fluid">
         <div className="row">
-          <div className="col-sm-1"></div>
           <div className="col-sm-3">
             <table className="table-condensed">
               <thead>
                 <tr>
-                  <th>High-Level Analysis</th>
+                  <th>Environment Analysis</th>
                   <th>Value</th>
                 </tr>
               </thead>
@@ -48,34 +49,6 @@ export default () => {
                   <td>{carbonDioxideLevel.toFixed(0)}</td>
                 </tr>
                 <tr>
-                  <td>Total Energy</td>
-                  <td>{totalEnergy.toFixed(0)}</td>
-                </tr>
-                <tr>
-                  <td>Number of Gobblers</td>
-                  <td>{totalGobblers}</td>
-                </tr>
-                <tr>
-                  <td>Number of Eatings</td>
-                  <td>{eatCount}</td>
-                </tr>
-                <tr>
-                  <td>Reproduction Count</td>
-                  <td>{reproductionCount}</td>
-                </tr>
-                <tr>
-                  <td>Death Count</td>
-                  <td>{deathCount}</td>
-                </tr>
-                <tr>
-                  <td>Youngest Generation</td>
-                  <td>{intYoungestGen}</td>
-                </tr>
-                <tr>
-                  <td>Oldest Generation</td>
-                  <td>{intOldestGen}</td>
-                </tr>
-                <tr>
                   <td>Seconds Elapsed</td>
                   <td>{this.props.secondsElapsed}</td>
                 </tr>
@@ -86,8 +59,52 @@ export default () => {
             <table className="table-condensed">
               <thead>
                 <tr>
+                  <th>High-Level Analysis</th>
+                  <th>Value</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Number of Gobblers</td>
+                  <td>{totalGobblers}</td>
+                </tr>
+                <tr>
+                  <td>Total Energy</td>
+                  <td>{totalEnergy.toFixed(0)}</td>
+                </tr>
+                <tr>
+                  <td>Number of Eatings</td>
+                  <td>{eatCount}</td>
+                </tr>
+                <tr>
+                  <td>Starvation Count</td>
+                  <td>{eatCount - deathCount}</td>
+                </tr>
+                <tr>
+                  <td>Death Count</td>
+                  <td>{deathCount}</td>
+                </tr>
+                <tr>
+                  <td>Reproduction Count</td>
+                  <td>{reproductionCount}</td>
+                </tr>
+                <tr>
+                  <td>Youngest Generation</td>
+                  <td>{intYoungestGen}</td>
+                </tr>
+                <tr>
+                  <td>Oldest Generation</td>
+                  <td>{intOldestGen}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div className="col-sm-3">
+            <table className="table-condensed">
+              <thead>
+                <tr>
                   <th>Gobbler Analysis</th>
-                  <th>Output</th>
+                  <th>Value</th>
                 </tr>
               </thead>
               <tbody>
@@ -118,13 +135,13 @@ export default () => {
             <table className="table-condensed">
               <thead>
                 <tr>
-                  <th>Movement Strategy Name</th>
-                  <th>Percentage</th>
+                  <th>Movement Strategy</th>
+                  <th>Value</th>
                 </tr>
               </thead>
               <tbody>
                 {Object.keys(movementStrategies).sort().map((strategyName) => <tr>
-                    <td>{strategyName}</td>
+                    <td>{capitalizeFirst(strategyName)}</td>
                     <td>{(movementStrategies[strategyName] / totalGobblers * 100).toFixed(0) + "%"}</td>
                   </tr>)}
               </tbody>
