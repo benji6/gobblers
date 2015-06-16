@@ -61,7 +61,7 @@ gulp.task('css', function () {
       cssnext(),
       csswring
     ]))
-    .pipe(gulp.dest('dist'));
+    .pipe(gulp.dest(buildDestinationPath));
 });
 
 gulp.task('manifest', function () {
