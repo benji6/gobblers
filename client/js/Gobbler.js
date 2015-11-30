@@ -2,6 +2,12 @@
 import MovementStrategy from './MovementStrategy';
 import plusOrMinus from './plusOrMinus';
 import environment from './environment';
+const {
+  curry,
+  forEach,
+  sum,
+  props,
+} = R;
 
 const mutationCoefficientProperties = [
   'v', 'attackCoefficient', 'defenceCoefficient', 'photosynthesisCoefficient',
@@ -11,7 +17,7 @@ const evolutionPointProperties = [
   'attackCoefficient', 'defenceCoefficient', 'photosynthesisCoefficient',
 ];
 
-const mutateProperty = R.curry((gobbler, propertyKey) => {
+const mutateProperty = curry((gobbler, propertyKey) => {
   const property = gobbler[propertyKey];
   const newProperty = property * (1 + (Math.random() - 0.5) * gobbler.mutationCoefficient);
   gobbler[propertyKey] = property < 0 ? 0.000001 : newProperty;
@@ -20,18 +26,10 @@ const mutateProperty = R.curry((gobbler, propertyKey) => {
 const calculateChildCoords = function () {
   const separationDist = 4 * this.radius;
   const {x, y} = this;
-  if (x <= separationDist) {
-    return {x: x + separationDist, y};
-  }
-  if (x >= environment.sideLength - separationDist) {
-    return {x: x - separationDist, y};
-  }
-  if (y <= separationDist) {
-    return {x, y: y + separationDist};
-  }
-  if (y >= environment.sideLength - separationDist) {
-    return {x, y: y - separationDist};
-  }
+  if (x <= separationDist) return {x: x + separationDist, y}
+  if (x >= environment.sideLength - separationDist) return {x: x - separationDist, y}
+  if (y <= separationDist) return {x, y: y + separationDist};
+  if (y >= environment.sideLength - separationDist) return {x, y: y - separationDist};
   const childXSeparation = 2 * (Math.random() - 0.5) * separationDist;
   return {
     x: x + childXSeparation,
@@ -74,20 +72,19 @@ export default class Gobbler {
   }
 
   mutate () {
-    R.forEach(mutateProperty(this), mutationCoefficientProperties);
+    forEach(mutateProperty(this), mutationCoefficientProperties);
 
-    const currentEvolutionPoints = R.sum(R.props(evolutionPointProperties, this));
+    const currentEvolutionPoints = sum(props(evolutionPointProperties, this));
     const mutationEnforcementRatio = environment.maxEvolutionPoints / currentEvolutionPoints;
 
     currentEvolutionPoints > environment.maxEvolutionPoints &&
-      R.forEach(property => this[property] *= mutationEnforcementRatio, evolutionPointProperties);
+      forEach(property => this[property] *= mutationEnforcementRatio, evolutionPointProperties);
 
     this.movementStrategy = Math.random() < Math.pow(this.mutationCoefficient, 2) ?
       new MovementStrategy(this) :
       this.movementStrategy;
 
-    this.v = this.v > environment.maximumSpeed ?
-      environment.maximumSpeed : this.v;
+    this.v = this.v > environment.maximumSpeed ? environment.maximumSpeed : this.v;
 
     return this;
   }

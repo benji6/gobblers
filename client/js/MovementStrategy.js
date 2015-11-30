@@ -1,5 +1,6 @@
 /* global R */
-import plusOrMinus from './plusOrMinus';
+import plusOrMinus from './plusOrMinus'
+const {minBy, prop, reduce} = R
 
 const movementAlgorithmNames = [
   'edge',
@@ -37,7 +38,7 @@ class MovementStrategy {
     const distance = Math.random() * maxSpeed;
     const bounceDistance = radius + maxSpeed;
 
-    R.reduce(R.minBy(R.prop('dist')), {dist: Infinity}, [
+    reduce(minBy(prop('dist')), {dist: Infinity}, [
       {
         dist: x,
         fn: () => this.gobbler.x += x <= bounceDistance ?

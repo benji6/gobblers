@@ -5,7 +5,7 @@ import canvasView from './canvasView';
 import Gobbler from './Gobbler';
 import environment from './environment';
 import stats from './stats';
-
+const {filter, sort} = R
 let gobblers = [];
 const analysisView = AnalysisView();
 
@@ -21,7 +21,7 @@ const attack = (gobbler0, gobbler1, stats) => {
 	return gobbler0;
 };
 
-const removeDead = R.filter(gobbler => {
+const removeDead = filter(gobbler => {
 	if (gobbler.energy < 0.1) {
 		stats.deathCount++;
 		environment.increaseAtmosphereOxygenComposition(-gobbler.energy);
@@ -74,7 +74,7 @@ for (let i = 0; i < environment.initialGobblersCount; i++) {
 
 	stats.resetValuesCalculatedEachIteration();
 
-	gobblers = R.sort((gobbler0, gobbler1) => gobbler0.x - gobbler1.x, gobblers);
+	gobblers = sort((gobbler0, gobbler1) => gobbler0.x - gobbler1.x, gobblers);
 
 	for (let i = 0; i < gobblers.length; i++) {
 		const gobbler0 = gobblers[i];

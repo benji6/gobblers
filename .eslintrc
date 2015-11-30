@@ -142,7 +142,6 @@
     "padded-blocks": [2, "never"],
     "prefer-arrow-callback": 2,
     "prefer-const": 2,
-    "prefer-reflect": 2,
     "prefer-spread": 2,
     "prefer-template": 2,
     "quote-props": [2, "as-needed"],
