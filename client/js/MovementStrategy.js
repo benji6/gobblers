@@ -1,11 +1,12 @@
+/* global R */
 import plusOrMinus from './plusOrMinus';
 
 const movementAlgorithmNames = [
-  "edge",
-  "immobile",
-  "random",
-  "straightLines",
-  "wander",
+  'edge',
+  'immobile',
+  'random',
+  'straightLines',
+  'wander',
 ];
 
 class MovementStrategy {
@@ -63,7 +64,7 @@ class MovementStrategy {
       },
     ]).fn();
 
-    //NB there is still a cost even if the gobbler does not move
+    // NB there is still a cost even if the gobbler does not move
     return this.calculateEffectsOnEnergyAndAtmosphere(environment, distance);
   }
 
@@ -82,23 +83,21 @@ class MovementStrategy {
     const xDistance = Math.random() * distance;
     const yDistance = Math.pow(Math.pow(distance, 2) - Math.pow(xDistance, 2), 0.5);
 
-  	if (x <= radius + maxSpeed) {
-  		this.gobbler.x += xDistance;
-  	} else {
+    if (x <= radius + maxSpeed) {
+      this.gobbler.x += xDistance;
+    } else {
       this.gobbler.x += x >= environment.sideLength - radius - maxSpeed ?
         -xDistance :
         plusOrMinus(xDistance);
-  	}
+    }
 
-  	if (y <= radius + maxSpeed) {
-  		this.gobbler.y += yDistance;
-  	} else {
-  		if (y >= environment.sideLength - radius - maxSpeed) {
-  			this.gobbler.y -= yDistance;
-  		} else {
-  			this.gobbler.y += plusOrMinus(yDistance);
-  		}
-  	}
+    if (y <= radius + maxSpeed) {
+      this.gobbler.y += yDistance;
+    } else if (y >= environment.sideLength - radius - maxSpeed) {
+      this.gobbler.y -= yDistance;
+    } else {
+      this.gobbler.y += plusOrMinus(yDistance);
+    }
 
     return this.calculateEffectsOnEnergyAndAtmosphere(environment, distance);
   }
@@ -163,11 +162,11 @@ class MovementStrategy {
       }
     } else if (y >= environment.sideLength - radius - maxSpeed) {
       if (Math.sin(this.phi) > 0) {
-        this.phi = - this.phi;
+        this.phi = -this.phi;
       }
     } else if (y <= radius + maxSpeed) {
       if (Math.sin(this.phi) < 0) {
-        this.phi = - this.phi;
+        this.phi = -this.phi;
       }
     } else {
       this.phi += plusOrMinus(spread);

@@ -1,10 +1,10 @@
 import environment from './environment';
 
-const canvas = document.querySelector("canvas");
+const canvas = document.querySelector('canvas');
 const context = canvas.getContext('2d');
 
 const calculateColor = (totalGobblers, totalAttackCoefficient, totalDefenceCoefficient, totalPhotosynthesisCoefficient, {
-  attackCoefficient, defenceCoefficient, photosynthesisCoefficient
+  attackCoefficient, defenceCoefficient, photosynthesisCoefficient,
 }) => `rgb(${(attackCoefficient / totalAttackCoefficient * totalGobblers * 127).toFixed(0)},
     ${(defenceCoefficient / totalDefenceCoefficient * totalGobblers * 127).toFixed(0)},
     ${(photosynthesisCoefficient / totalPhotosynthesisCoefficient * totalGobblers * 127).toFixed(0)})`;
@@ -32,5 +32,5 @@ export default {
       context.closePath();
       context.fill();
     }
-  }
+  },
 };

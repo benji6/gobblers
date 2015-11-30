@@ -1,8 +1,7 @@
-import canvasView from './canvasView';
+import './canvasView';
 
-const sideLength = window.innerHeight > window.innerWidth ?
-	window.innerWidth :
-	window.innerHeight;
+const {innerHeight, innerWidth} = window
+const sideLength = innerHeight > innerWidth ? innerWidth : innerHeight;
 const initialGobblersCount = sideLength;
 const initialGobblerEnergy = 6;
 
@@ -11,7 +10,7 @@ const carbonDioxideLevel = oxygenLevel;
 
 export default {
 	carbonDioxideLevel,
-	increaseAtmosphereOxygenComposition: function (amount) {
+	increaseAtmosphereOxygenComposition (amount) {
 		this.oxygenLevel += amount;
 		this.carbonDioxideLevel -= amount;
 	},
@@ -21,7 +20,5 @@ export default {
 	maximumSpeed: 3,
 	oxygenLevel,
 	maxEvolutionPoints: 8,
-	sideLength: window.innerHeight > window.innerWidth ?
-	  window.innerWidth :
-	  window.innerHeight,
+	sideLength,
 };

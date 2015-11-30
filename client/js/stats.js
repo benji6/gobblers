@@ -9,7 +9,13 @@ const resetValuesCalculatedEachIteration = function () {
 };
 
 const recordGobblerPropertiesForThisIteration = function ({
-	attackCoefficient, defenceCoefficient, energy, generation, movementStrategy, photosynthesisCoefficient, v
+	attackCoefficient,
+	defenceCoefficient,
+	energy,
+	generation,
+	movementStrategy,
+	photosynthesisCoefficient,
+	v,
 }) {
 	this.totalEnergy += energy;
 	this.intOldestGen = this.intOldestGen > generation ?

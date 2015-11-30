@@ -1,8 +1,9 @@
-const capitalizeFirst = (str) => str[0].toUpperCase() + str.slice(1);
+/* global React */
+const capitalizeFirst = str => str[0].toUpperCase() + str.slice(1);
 
 export default () => {
   const View = React.createClass({
-  render: function () {
+  render () {
       const {
         deathCount,
         eatCount,
@@ -140,27 +141,27 @@ export default () => {
                 </tr>
               </thead>
               <tbody>
-                {Object.keys(movementStrategies).sort().map((strategyName) => <tr>
+                {Object.keys(movementStrategies).sort().map(strategyName => <tr>
                     <td>{capitalizeFirst(strategyName)}</td>
-                    <td>{(movementStrategies[strategyName] / totalGobblers * 100).toFixed(0) + "%"}</td>
+                    <td>{`${(movementStrategies[strategyName] / totalGobblers * 100).toFixed(0)}%`}</td>
                   </tr>)}
               </tbody>
             </table>
           </div>
         </div>
       </div>;
-    }
+    },
   });
 
   const ViewFactory = React.createFactory(View);
-  const container = document.querySelector("#stats_container");
+  const container = document.querySelector('#stats_container');
 
   return {
-    render: function (params) {
+    render (params) {
       React.render(
         ViewFactory(params),
         container
       );
-    }
+    },
   };
 };

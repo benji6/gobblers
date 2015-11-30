@@ -1,3 +1,4 @@
+/* global R */
 import tinytic from 'tinytic';
 import AnalysisView from './AnalysisView';
 import canvasView from './canvasView';
@@ -5,7 +6,7 @@ import Gobbler from './Gobbler';
 import environment from './environment';
 import stats from './stats';
 
-var gobblers = [];
+let gobblers = [];
 const analysisView = AnalysisView();
 
 const calculateAttackStrength = ({attackCoefficient, energy}) => attackCoefficient * energy;
@@ -20,7 +21,7 @@ const attack = (gobbler0, gobbler1, stats) => {
 	return gobbler0;
 };
 
-const removeDead = R.filter((gobbler) => {
+const removeDead = R.filter(gobbler => {
 	if (gobbler.energy < 0.1) {
 		stats.deathCount++;
 		environment.increaseAtmosphereOxygenComposition(-gobbler.energy);
@@ -49,9 +50,9 @@ const checkContact = (gobbler0, gobbler1) => {
 	return Math.pow(Math.pow(x0 - x1, 2) + Math.pow(y0 - y1, 2), 0.5) <= radius0 + radius1;
 };
 
-//initial spawn
+// initial spawn
 for (let i = 0; i < environment.initialGobblersCount; i++) {
-	let gobblerParams = {
+	const gobblerParams = {
 		x: 0,
 		y: 0,
 		energy: environment.initialGobblerEnergy,
@@ -59,10 +60,10 @@ for (let i = 0; i < environment.initialGobblersCount; i++) {
 		attackCoefficient: 0.5,
 		defenceCoefficient: 0.5,
 		generation: 0,
-		photosynthesisCoefficient: 1
+		photosynthesisCoefficient: 1,
 	};
 	gobblers[i] = new Gobbler(gobblerParams);
-	let radius = gobblers[i].radius;
+	const radius = gobblers[i].radius;
 	gobblers[i].x = Math.random() * (environment.sideLength - 2 * radius) + radius;
 	gobblers[i].y = Math.random() * (environment.sideLength - 2 * radius) + radius;
 	gobblers[i].mutate();
@@ -76,11 +77,11 @@ for (let i = 0; i < environment.initialGobblersCount; i++) {
 	gobblers = R.sort((gobbler0, gobbler1) => gobbler0.x - gobbler1.x, gobblers);
 
 	for (let i = 0; i < gobblers.length; i++) {
-		let gobbler0 = gobblers[i];
+		const gobbler0 = gobblers[i];
 		let j = i - 1;
 
 		while (j >= 0 && checkPossibleContactX(gobbler0, gobblers[j])) {
-			let gobbler1 = gobblers[j];
+			const gobbler1 = gobblers[j];
 			if (checkContact(gobbler0, gobbler1)) {
 				attack(gobbler0, gobbler1, stats);
 			}
@@ -88,7 +89,7 @@ for (let i = 0; i < environment.initialGobblersCount; i++) {
 		}
 		j = i + 1;
 		while (j < gobblers.length && checkPossibleContactX(gobbler0, gobblers[j])) {
-			let gobbler1 = gobblers[j];
+			const gobbler1 = gobblers[j];
 			if (checkContact(gobbler0, gobbler1)) {
 				attack(gobbler0, gobbler1, stats);
 			}

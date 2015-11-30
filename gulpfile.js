@@ -2,6 +2,7 @@ const babel = require('gulp-babel')
 const cssnext = require('cssnext')
 const csswring = require('csswring')
 const del = require('del')
+const eslint = require('gulp-eslint')
 const connect = require('gulp-connect')
 const gulp = require('gulp')
 const manifest = require('gulp-manifest')
@@ -41,6 +42,9 @@ gulp.task('css', () => gulp.src('client/css/style.css')
                              csswring
                            ]))
                            .pipe(gulp.dest(buildDestinationPath)))
+gulp.task('lint', () => gulp.src('client/**/*.js')
+                            .pipe(eslint())
+                            .pipe(eslint.formatEach()));
 gulp.task('manifest', () => gulp.src(buildDestinationPath + '/**/*')
                                 .pipe(plumber())
                                 .pipe(manifest({
@@ -62,11 +66,11 @@ gulp.task('watch', () => {
   gulp.watch('client/html/**/*.html',
              () => runSequence(['html'], 'manifest', 'reload'))
   gulp.watch('client/js/**/*.js*',
-             () => runSequence(['jsDev'], 'manifest', 'reload'))
+             () => runSequence(['jsDev', 'lint'], 'manifest', 'reload'))
   gulp.watch('client/css/**/*.css',
              () => runSequence(['css'], 'manifest', 'reload'))
 })
-gulp.task('build', () => runSequence(['clean', 'html', 'jsProd', 'css'],
+gulp.task('build', () => runSequence(['clean', 'html', 'jsProd', 'lint', 'css'],
                                      'manifest'))
-gulp.task('default', () => runSequence(['watch', 'html', 'jsDev', 'css'],
+gulp.task('default', () => runSequence(['watch', 'html', 'jsDev', 'css', 'lint'],
                                        'manifest', 'connect'))
