@@ -36,7 +36,7 @@ class MovementStrategy {
     const distance = Math.random() * maxSpeed;
     const bounceDistance = radius + maxSpeed;
 
-    R.minBy((obj) => obj.dist, [
+    R.reduce(R.minBy(R.prop('dist')), {dist: Infinity}, [
       {
         dist: x,
         fn: () => this.gobbler.x += x <= bounceDistance ?

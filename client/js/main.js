@@ -1,5 +1,4 @@
 import tinytic from 'tinytic';
-
 import AnalysisView from './AnalysisView';
 import canvasView from './canvasView';
 import Gobbler from './Gobbler';
