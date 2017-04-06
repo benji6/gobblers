@@ -1,5 +1,4 @@
 /* global R */
-import tinytic from 'tinytic'
 import AnalysisView from './AnalysisView'
 import canvasView from './canvasView'
 import Gobbler from './Gobbler'
@@ -69,7 +68,7 @@ for (let i = 0; i < environment.initialGobblersCount; i++) {
   gobblers[i].mutate()
 }
 
-(function animationloop () {
+const animationloop = t => {
   window.requestAnimationFrame(animationloop)
 
   stats.resetValuesCalculatedEachIteration()
@@ -109,7 +108,7 @@ for (let i = 0; i < environment.initialGobblersCount; i++) {
   stats.totalGobblers = gobblers.length
   analysisView.render({
     environment,
-    secondsElapsed: (tinytic.total() / 1000).toFixed(0),
+    secondsElapsed: (t / 1000).toFixed(0),
     stats,
   })
 
@@ -120,4 +119,6 @@ for (let i = 0; i < environment.initialGobblersCount; i++) {
     totalDefenceCoefficient: stats.totalDefenceCoefficient,
     totalPhotosynthesisCoefficient: stats.totalPhotosynthesisCoefficient,
   })
-}())
+}
+
+window.requestAnimationFrame(animationloop)
