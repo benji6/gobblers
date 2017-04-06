@@ -2,7 +2,6 @@ const babel = require('gulp-babel')
 const cssnext = require('cssnext')
 const csswring = require('csswring')
 const del = require('del')
-const eslint = require('gulp-eslint')
 const connect = require('gulp-connect')
 const gulp = require('gulp')
 const manifest = require('gulp-manifest')
@@ -39,38 +38,36 @@ gulp.task('css', () => gulp.src('client/css/style.css')
                            .pipe(plumber())
                            .pipe(postcss([
                              cssnext(),
-                             csswring
+                             csswring,
                            ]))
                            .pipe(gulp.dest(buildDestinationPath)))
-gulp.task('lint', () => gulp.src('client/**/*.js')
-                            .pipe(eslint())
-                            .pipe(eslint.formatEach()));
+
 gulp.task('manifest', () => gulp.src(buildDestinationPath + '/**/*')
                                 .pipe(plumber())
                                 .pipe(manifest({
-                                  hash: true,
-                                  filename: 'app.manifest',
-                                  exclude: 'app.manifest',
                                   cache: [
-                                    "http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css",
-                                    "http://bootswatch.com/slate/bootstrap.min.css",
-                                    "http://cdnjs.cloudflare.com/ajax/libs/react/0.13.3/react.min.js",
-                                    "http://cdnjs.cloudflare.com/ajax/libs/ramda/0.14.0/ramda.min.js",
-                                    "../jspm_packages/es6-module-loader.js",
-                                    "../jspm_packages/system.js",
-                                    "../config.js",
+                                    'http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css',
+                                    'http://bootswatch.com/slate/bootstrap.min.css',
+                                    'http://cdnjs.cloudflare.com/ajax/libs/react/0.13.3/react.min.js',
+                                    'http://cdnjs.cloudflare.com/ajax/libs/ramda/0.14.0/ramda.min.js',
+                                    '../jspm_packages/es6-module-loader.js',
+                                    '../jspm_packages/system.js',
+                                    '../config.js',
                                   ],
-                                 }))
+                                  exclude: 'app.manifest',
+                                  filename: 'app.manifest',
+                                  hash: true,
+                                }))
                                 .pipe(gulp.dest(buildDestinationPath)))
 gulp.task('watch', () => {
   gulp.watch('client/html/**/*.html',
              () => runSequence(['html'], 'manifest', 'reload'))
   gulp.watch('client/js/**/*.js*',
-             () => runSequence(['jsDev', 'lint'], 'manifest', 'reload'))
+             () => runSequence('jsDev', 'manifest', 'reload'))
   gulp.watch('client/css/**/*.css',
              () => runSequence(['css'], 'manifest', 'reload'))
 })
-gulp.task('build', () => runSequence(['clean', 'html', 'jsProd', 'lint', 'css'],
+gulp.task('build', () => runSequence(['clean', 'html', 'jsProd', 'css'],
                                      'manifest'))
-gulp.task('default', () => runSequence(['watch', 'html', 'jsDev', 'css', 'lint'],
+gulp.task('default', () => runSequence(['watch', 'html', 'jsDev', 'css'],
                                        'manifest', 'connect'))

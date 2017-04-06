@@ -1,9 +1,9 @@
 /* global React */
-const capitalizeFirst = str => str[0].toUpperCase() + str.slice(1);
+const capitalizeFirst = str => str[0].toUpperCase() + str.slice(1)
 
 export default () => {
   const View = React.createClass({
-  render () {
+    render () {
       const {
         deathCount,
         eatCount,
@@ -17,14 +17,14 @@ export default () => {
         totalGobblers,
         totalPhotosynthesisCoefficient,
         totalVelocityCoefficient,
-      } = this.props.stats;
+      } = this.props.stats
 
-      const environment = this.props.environment;
-      const lightLevel = this.props.environment.light().toFixed(2);
+      const environment = this.props.environment
+      const lightLevel = this.props.environment.light().toFixed(2)
       const {
         carbonDioxideLevel,
         oxygenLevel,
-      } = environment;
+      } = environment
 
       return <div className="container-fluid">
         <div className="row">
@@ -149,19 +149,19 @@ export default () => {
             </table>
           </div>
         </div>
-      </div>;
+      </div>
     },
-  });
+  })
 
-  const ViewFactory = React.createFactory(View);
-  const container = document.querySelector('#stats_container');
+  const ViewFactory = React.createFactory(View)
+  const container = document.querySelector('#stats_container')
 
   return {
     render (params) {
       React.render(
         ViewFactory(params),
         container
-      );
+      )
     },
-  };
-};
+  }
+}

@@ -1,1 +1,1 @@
-export default x => Math.round(Math.random()) ? x : -x;
+export default x => Math.round(Math.random()) ? x : -x
